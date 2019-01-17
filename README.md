@@ -2,6 +2,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/db-to-sqlite.svg)](https://pypi.python.org/pypi/db-to-sqlite)
 [![Travis CI](https://travis-ci.com/simonw/db-to-sqlite.svg?branch=master)](https://travis-ci.com/simonw/db-to-sqlite)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/simonw/db-to-sqlite/blob/master/LICENSE)
 
 CLI tool for exporting tables or queries from any SQL database to a SQLite file.
 
@@ -12,7 +13,7 @@ This is in extremely early stages of development - very much a 0.1.
       Run a SQL query against any database and save the results to SQLite.
 
       https://github.com/simonw/db-to-sqlite
-    
+
     Options:
       --version          Show the version and exit.
       --connection TEXT  SQLAlchemy connection string  [required]
