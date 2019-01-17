@@ -1,5 +1,8 @@
 # db-to-sqlite
 
+[![PyPI](https://img.shields.io/pypi/v/db-to-sqlite.svg)](https://pypi.python.org/pypi/db-to-sqlite)
+[![Travis CI](https://travis-ci.org/simonw/db-to-sqlite.svg?branch=master)](https://travis-ci.org/simonw/db-to-sqlite)
+
 CLI tool for exporting tables or queries from any SQL database to a SQLite file.
 
 This is in extremely early stages of development - very much a 0.1.
