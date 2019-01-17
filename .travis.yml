@@ -1,0 +1,33 @@
+language: python
+
+# 3.6 is listed first so it gets used for the later build stages
+python:
+  - "3.6"
+  - "3.7-dev"
+
+script:
+  - pip install -U pip wheel
+  - pip install .
+  - db-to-sqlite
+
+cache:
+    directories:
+      - $HOME/.cache/pip
+
+jobs:
+  include:
+    - stage: release tagged version
+      if: tag IS present
+      language: python
+      python: 3.6
+      script:
+        - pip install -U pip wheel
+      deploy:
+        - provider: pypi
+          user: simonw
+          distributions: bdist_wheel
+          password: ${PYPI_PASSWORD}
+          on:
+            branch: master
+            tags: true
+            repo: simonw/db-to-sqlite
