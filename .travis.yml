@@ -8,7 +8,7 @@ python:
 script:
   - pip install -U pip wheel
   - pip install .
-  - db-to-sqlite
+  - db-to-sqlite --help
 
 cache:
     directories:
