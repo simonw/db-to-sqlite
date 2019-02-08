@@ -34,7 +34,7 @@ def cli(path, connection, sql, table, all, pk):
             pk = None
             if pks:
                 pk = pks[0]
-            fks = inspector.get_foreign_keys("elections_election")
+            fks = inspector.get_foreign_keys(table)
             foreign_keys = [(
                 # column, type, other_table, other_column
                 fk["constrained_columns"][0],
