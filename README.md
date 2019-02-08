@@ -6,19 +6,18 @@
 
 CLI tool for exporting tables or queries from any SQL database to a SQLite file.
 
-This is in extremely early stages of development - very much a 0.1.
-
     Usage: db-to-sqlite [OPTIONS] PATH
 
-      Run a SQL query against any database and save the results to SQLite.
+      Load data from any database into SQLite.
 
       https://github.com/simonw/db-to-sqlite
 
     Options:
       --version          Show the version and exit.
       --connection TEXT  SQLAlchemy connection string  [required]
-      --sql TEXT         SQL query to run  [required]
-      --table TEXT       Name of SQLite table to save the results  [required]
+      --all              Detect and copy all tables
+      --table TEXT       Name of table to save the results (and copy)
+      --sql TEXT         Optional SQL query to run
       --pk TEXT          Optional column to use as a primary key
       --help             Show this message and exit.
 
@@ -26,7 +25,18 @@ For example, to save the content of the `blog_entry` table from a PostgreSQL dat
 
     db-to-sqlite blog.db \
         --connection="postgresql://localhost/myblog" \
-        --sql="select * from blog_entry" \
-        --table=blog_entry \
-        --pk=id
+        --table=blog_entry
 
+You can also save the data from all of your tables, effectively creating a SQLite copy of your entire database. Any foreign key relationships will be detected and added to the SQLite database. For example:
+
+    db-to-sqlite blog.db \
+        --connection="postgresql://localhost/myblog" \
+        --all
+
+If you want to save the results of a custom SQL query, do this:
+
+    db-to-sqlite output.db \
+        --connection="postgresql://localhost/myblog" \
+        --table=query_results \
+        --sql="select id, title, created from blog_entry" \
+        --pk=id
