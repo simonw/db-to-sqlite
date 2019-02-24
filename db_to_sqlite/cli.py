@@ -29,9 +29,8 @@ def cli(path, connection, all, table, sql, pk):
             fks = inspector.get_foreign_keys(table)
             foreign_keys = [
                 (
-                    # column, type, other_table, other_column
+                    # column, other_table, other_column
                     fk["constrained_columns"][0],
-                    "INTEGER",
                     fk["referred_table"],
                     fk["referred_columns"][0],
                 )
