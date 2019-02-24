@@ -2,6 +2,7 @@ import click
 import sqlite3
 from sqlalchemy import create_engine, inspect
 from sqlite_utils import Database
+import toposort
 
 
 @click.command()
@@ -24,8 +25,22 @@ def cli(path, connection, all, table, sql, pk):
     db_conn = create_engine(connection).connect()
     if all:
         inspector = inspect(db_conn)
-        for table in inspector.get_table_names():
-            pk = detect_primary_key(db_conn, table)
+        tables = toposort.toposort_flatten(
+            {
+                table: {
+                    fk["referred_table"] for fk in inspector.get_foreign_keys(table)
+                }
+                for table in inspector.get_table_names()
+            }
+        )
+        for table in tables:
+            pks = inspector.get_pk_constraint(table)["constrained_columns"]
+            if len(pks) > 1:
+                click.echo("Multiple primary keys not currently supported", err=True)
+                return
+            pk = None
+            if pks:
+                pk = pks[0]
             fks = inspector.get_foreign_keys(table)
             foreign_keys = [
                 (

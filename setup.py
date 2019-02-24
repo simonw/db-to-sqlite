@@ -22,7 +22,7 @@ setup(
     version=VERSION,
     license="Apache License, Version 2.0",
     packages=find_packages(),
-    install_requires=["sqlalchemy", "sqlite-utils>=0.14", "click"],
+    install_requires=["sqlalchemy", "sqlite-utils>=0.14", "click", "toposort"],
     entry_points="""
         [console_scripts]
         db-to-sqlite=db_to_sqlite.cli:cli
