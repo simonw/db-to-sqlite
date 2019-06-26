@@ -17,6 +17,7 @@ CLI tool for exporting tables or queries from any SQL database to a SQLite file.
       --connection TEXT  SQLAlchemy connection string  [required]
       --all              Detect and copy all tables
       --table TEXT       Name of table to save the results (and copy)
+      --skip TEXT        When using --all skip these tables
       --sql TEXT         Optional SQL query to run
       --pk TEXT          Optional column to use as a primary key
       --help             Show this message and exit.
@@ -32,6 +33,13 @@ You can also save the data from all of your tables, effectively creating a SQLit
     db-to-sqlite blog.db \
         --connection="postgresql://localhost/myblog" \
         --all
+
+When running `--all` you can specify tables to skip using `--skip`:
+
+    db-to-sqlite blog.db \
+        --connection="postgresql://localhost/myblog" \
+        --all \
+        --skip=django_migrations
 
 If you want to save the results of a custom SQL query, do this:
 
