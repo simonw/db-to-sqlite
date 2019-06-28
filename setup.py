@@ -23,7 +23,11 @@ setup(
     license="Apache License, Version 2.0",
     packages=find_packages(),
     install_requires=["sqlalchemy", "sqlite-utils>=0.14", "click"],
-    extras_require={"test": ["pytest"], "test_mysql": ["pytest", "mysqlclient"]},
+    extras_require={
+        "test": ["pytest"],
+        "test_mysql": ["pytest", "mysqlclient"],
+        "mysql": ["mysqlclient"],
+    },
     tests_require=["db-to-sqlite[test]"],
     entry_points="""
         [console_scripts]
