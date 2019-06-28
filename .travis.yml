@@ -5,9 +5,13 @@ python:
   - "3.6"
   - "3.7-dev"
 
+services:
+  - mysql
+
 script:
   - pip install -U pip wheel
-  - pip install .
+  - pip install .[test_mysql]
+  - pytest
   - db-to-sqlite --help
 
 cache:
