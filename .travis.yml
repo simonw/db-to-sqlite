@@ -11,6 +11,7 @@ services:
 script:
   - pip install -U pip wheel
   - pip install .[test_mysql]
+  - pip install .[test_postgresql]
   - pytest
   - db-to-sqlite --help
 
