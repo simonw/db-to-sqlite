@@ -55,6 +55,7 @@ def cli(path, connection, all, table, skip, sql, pk):
             results = db_conn.execute("select * from {}".format(table))
             rows = (dict(r) for r in results)
             db[table].upsert_all(rows, pk=pk)
+        foreign_keys_to_add_final = []
         for table, column, other_table, other_column in foreign_keys_to_add:
             # Make sure both tables exist and are not skipped - they may not
             # exist if they were empty and hence .upsert_all() didn't have a
@@ -65,7 +66,11 @@ def cli(path, connection, all, table, skip, sql, pk):
                 and db[other_table].exists
                 and other_table not in skip
             ):
-                db[table].add_foreign_key(column, other_table, other_column)
+                foreign_keys_to_add_final.append(
+                    (table, column, other_table, other_column)
+                )
+        # Add using .add_foreign_keys() to avoid running multiple VACUUMs
+        db.add_foreign_keys(foreign_keys_to_add_final)
     else:
         if not sql:
             sql = "select * from {}".format(table)

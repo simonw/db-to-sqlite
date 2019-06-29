@@ -22,7 +22,7 @@ setup(
     version=VERSION,
     license="Apache License, Version 2.0",
     packages=find_packages(),
-    install_requires=["sqlalchemy", "sqlite-utils>=0.14", "click"],
+    install_requires=["sqlalchemy", "sqlite-utils>=1.3", "click"],
     extras_require={
         "test": ["pytest"],
         "test_mysql": ["pytest", "mysqlclient"],
