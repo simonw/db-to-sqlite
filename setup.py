@@ -26,6 +26,7 @@ setup(
     extras_require={
         "test": ["pytest"],
         "test_mysql": ["pytest", "mysqlclient"],
+        "test_postgresql": ["pytest", "psycopg2"],
         "mysql": ["mysqlclient"],
     },
     tests_require=["db-to-sqlite[test]"],
