@@ -28,6 +28,7 @@ setup(
         "test_mysql": ["pytest", "mysqlclient"],
         "test_postgresql": ["pytest", "psycopg2"],
         "mysql": ["mysqlclient"],
+        "postgresql": ["psycopg2"],
     },
     tests_require=["db-to-sqlite[test]"],
     entry_points="""

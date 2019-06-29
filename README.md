@@ -6,6 +6,22 @@
 
 CLI tool for exporting tables or queries from any SQL database to a SQLite file.
 
+## Installation
+
+Install from PyPI like so:
+
+    pip install db-to-sqlite
+
+If you want to use it with MySQL, you can install the extra dependency like this:
+
+    pip install db-to-sqlite[mysql]
+
+For PostgreSQL, use this:
+
+    pip install db-to-sqlite[postgresql]
+
+## Usage
+
     Usage: db-to-sqlite [OPTIONS] PATH
 
       Load data from any database into SQLite.
