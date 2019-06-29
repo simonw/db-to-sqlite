@@ -13,7 +13,8 @@ from sqlite_utils import Database
 @click.option("--skip", help="When using --all skip these tables", multiple=True)
 @click.option("--sql", help="Optional SQL query to run")
 @click.option("--pk", help="Optional column to use as a primary key")
-def cli(path, connection, all, table, skip, sql, pk):
+@click.option("-p", "--progress", help="Show progress bar", is_flag=True)
+def cli(path, connection, all, table, skip, sql, pk, progress):
     """
     Load data from any database into SQLite.
     
@@ -30,7 +31,11 @@ def cli(path, connection, all, table, skip, sql, pk):
         foreign_keys_to_add = []
         tables = inspector.get_table_names()
         for i, table in enumerate(tables):
+            if progress:
+                click.echo("{}/{}: {}".format(i + 1, len(tables), table), err=True)
             if table in skip:
+                if progress:
+                    click.echo("  ... skipping", err=True)
                 continue
             pks = inspector.get_pk_constraint(table)["constrained_columns"]
             if len(pks) > 1:
@@ -52,9 +57,18 @@ def cli(path, connection, all, table, skip, sql, pk):
                     for fk in fks
                 ]
             )
+            count = None
+            if progress:
+                count = db_conn.execute(
+                    "select count(*) from {}".format(table)
+                ).fetchone()[0]
             results = db_conn.execute("select * from {}".format(table))
             rows = (dict(r) for r in results)
-            db[table].upsert_all(rows, pk=pk)
+            if progress:
+                with click.progressbar(rows, length=count) as bar:
+                    db[table].upsert_all(bar, pk=pk)
+            else:
+                db[table].upsert_all(rows, pk=pk)
         foreign_keys_to_add_final = []
         for table, column, other_table, other_column in foreign_keys_to_add:
             # Make sure both tables exist and are not skipped - they may not
@@ -69,8 +83,20 @@ def cli(path, connection, all, table, skip, sql, pk):
                 foreign_keys_to_add_final.append(
                     (table, column, other_table, other_column)
                 )
-        # Add using .add_foreign_keys() to avoid running multiple VACUUMs
-        db.add_foreign_keys(foreign_keys_to_add_final)
+        if foreign_keys_to_add_final:
+            # Add using .add_foreign_keys() to avoid running multiple VACUUMs
+            if progress:
+                click.echo(
+                    "\nAdding {} foreign keys\n{}".format(
+                        len(foreign_keys_to_add_final),
+                        "\n".join(
+                            "  {}.{} => {}.{}".format(*fk)
+                            for fk in foreign_keys_to_add_final
+                        ),
+                    ),
+                    err=True,
+                )
+            db.add_foreign_keys(foreign_keys_to_add_final)
     else:
         if not sql:
             sql = "select * from {}".format(table)

@@ -36,6 +36,7 @@ For PostgreSQL, use this:
       --skip TEXT        When using --all skip these tables
       --sql TEXT         Optional SQL query to run
       --pk TEXT          Optional column to use as a primary key
+      -p, --progress     Show progress bar
       --help             Show this message and exit.
 
 For example, to save the content of the `blog_entry` table from a PostgreSQL database to a local file called `blog.db` you could do this:
