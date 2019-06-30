@@ -77,6 +77,7 @@ INSERT INTO products (id, name, cat_id, vendor_id)
 @pytest.fixture(autouse=True, scope="session")
 def setup_mysql():
     if MySQLdb is None:
+        yield
         return
     db = MySQLdb.connect(user="root", passwd="")
     cursor = db.cursor()
@@ -99,6 +100,7 @@ def setup_mysql():
 @pytest.fixture(autouse=True, scope="session")
 def setup_postgresql():
     if psycopg2 is None:
+        yield
         return
     db = psycopg2.connect(user="postgres")
     db.autocommit = True

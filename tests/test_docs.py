@@ -1,6 +1,8 @@
-from click.testing import CliRunner
-from db_to_sqlite.cli import cli
 from pathlib import Path
+
+from click.testing import CliRunner
+
+from db_to_sqlite.cli import cli
 
 readme_path = Path(__file__).parent.parent / "README.md"
 

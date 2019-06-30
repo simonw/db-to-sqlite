@@ -1,7 +1,11 @@
 import pytest
+
 from . import shared
 
-
+try:
+    import MySQLdb
+except ImportError:
+    MySQLdb = None
 try:
     import psycopg2
 except ImportError:
@@ -9,9 +13,22 @@ except ImportError:
 
 
 @pytest.mark.skipif(
+    MySQLdb is None, reason="MySQLdb module not available - pip install mysqlclient"
+)
+def test_fixture_mysql():
+    db = MySQLdb.connect(user="root", passwd="", db="test_db_to_sqlite")
+    cursor = db.cursor()
+    cursor.execute("show tables")
+    try:
+        assert {("categories",), ("vendors",), ("products",)} == set(cursor.fetchall())
+    finally:
+        db.close()
+
+
+@pytest.mark.skipif(
     psycopg2 is None, reason="psycopg2 module not available - pip install psycopg2"
 )
-def test_fixture():
+def test_fixture_postgresql():
     db = psycopg2.connect(user="postgres", dbname="test_db_to_sqlite")
     db.autocommit = True
     cursor = db.cursor()
@@ -25,17 +42,3 @@ def test_fixture():
     )
     rows = cursor.fetchall()
     assert {("categories",), ("vendors",), ("products",)} == set(rows)
-
-
-@pytest.mark.skipif(
-    psycopg2 is None, reason="psycopg2 module not available - pip install psycopg2"
-)
-def test_db_to_sqlite_to_sqlite(tmpdir):
-    shared.shared_database_test("postgresql://localhost/test_db_to_sqlite", tmpdir)
-
-
-@pytest.mark.skipif(
-    psycopg2 is None, reason="psycopg2 module not available - pip install psycopg2"
-)
-def test_redact(tmpdir):
-    shared.shared_redact_test("postgresql://localhost/test_db_to_sqlite", tmpdir)
