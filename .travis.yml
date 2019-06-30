@@ -9,11 +9,12 @@ services:
   - mysql
 
 script:
-  - pip install -U pip wheel
+  - pip install -U pip wheel black
   - pip install .[test_mysql]
   - pip install .[test_postgresql]
   - pytest
   - db-to-sqlite --help
+  - black . --check
 
 cache:
     directories:
