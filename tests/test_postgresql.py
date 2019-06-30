@@ -1,5 +1,5 @@
 import pytest
-from .shared import shared_database_test
+from . import shared
 
 
 try:
@@ -86,4 +86,11 @@ def test_fixture(postgresql_db):
     psycopg2 is None, reason="psycopg2 module not available - pip install psycopg2"
 )
 def test_db_to_sqlite_to_sqlite(postgresql_db, tmpdir):
-    shared_database_test("postgresql://localhost/test_db_to_sqlite", tmpdir)
+    shared.shared_database_test("postgresql://localhost/test_db_to_sqlite", tmpdir)
+
+
+@pytest.mark.skipif(
+    psycopg2 is None, reason="psycopg2 module not available - pip install psycopg2"
+)
+def test_redact(postgresql_db, tmpdir):
+    shared.shared_redact_test("postgresql://localhost/test_db_to_sqlite", tmpdir)

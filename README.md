@@ -34,6 +34,7 @@ For PostgreSQL, use this:
       --all              Detect and copy all tables
       --table TEXT       Name of table to save the results (and copy)
       --skip TEXT        When using --all skip these tables
+      --redact TEXT...   (table, column) pairs to redact with ***
       --sql TEXT         Optional SQL query to run
       --pk TEXT          Optional column to use as a primary key
       -p, --progress     Show progress bar

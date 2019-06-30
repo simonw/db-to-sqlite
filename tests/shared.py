@@ -31,3 +31,36 @@ def shared_database_test(connection, tmpdir):
             other_column="id",
         ),
     ] == sorted(db["products"].foreign_keys)
+
+
+def shared_redact_test(connection, tmpdir):
+    db_path = str(tmpdir / "test_reduct.db")
+    result = CliRunner().invoke(
+        cli.cli,
+        [
+            "--connection",
+            connection,
+            "--all",
+            db_path,
+            "--redact",
+            "products",
+            "name",
+            "--redact",
+            "products",
+            "vendor_id",
+        ],
+    )
+    assert 0 == result.exit_code, (result.output, result.exception)
+    db = sqlite_utils.Database(db_path)
+    assert [
+        {"id": 1, "name": "***", "cat_id": 1, "vendor_id": "***"},
+        {"id": 2, "name": "***", "cat_id": 1, "vendor_id": "***"},
+    ] == list(db["products"].rows)
+    assert [
+        ForeignKey(
+            table="products",
+            column="cat_id",
+            other_table="categories",
+            other_column="id",
+        )
+    ] == sorted(db["products"].foreign_keys)

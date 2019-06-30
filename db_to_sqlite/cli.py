@@ -11,10 +11,17 @@ from sqlite_utils import Database
 @click.option("--all", help="Detect and copy all tables", is_flag=True)
 @click.option("--table", help="Name of table to save the results (and copy)")
 @click.option("--skip", help="When using --all skip these tables", multiple=True)
+@click.option(
+    "--redact",
+    help="(table, column) pairs to redact with ***",
+    nargs=2,
+    type=str,
+    multiple=True,
+)
 @click.option("--sql", help="Optional SQL query to run")
 @click.option("--pk", help="Optional column to use as a primary key")
 @click.option("-p", "--progress", help="Show progress bar", is_flag=True)
-def cli(path, connection, all, table, skip, sql, pk, progress):
+def cli(path, connection, all, table, skip, redact, sql, pk, progress):
     """
     Load data from any database into SQLite.
     
@@ -24,6 +31,9 @@ def cli(path, connection, all, table, skip, sql, pk, progress):
         raise click.ClickException("--all OR --table required")
     if skip and not all:
         raise click.ClickException("--skip can only be used with --all")
+    redact_columns = {}
+    for table_name, column_name in redact:
+        redact_columns.setdefault(table_name, set()).add(column_name)
     db = Database(path)
     db_conn = create_engine(connection).connect()
     if all:
@@ -63,7 +73,8 @@ def cli(path, connection, all, table, skip, sql, pk, progress):
                     "select count(*) from {}".format(table)
                 ).fetchone()[0]
             results = db_conn.execute("select * from {}".format(table))
-            rows = (dict(r) for r in results)
+            redact_these = redact_columns.get(table) or set()
+            rows = (redacted_dict(r, redact_these) for r in results)
             if progress:
                 with click.progressbar(rows, length=count) as bar:
                     db[table].upsert_all(bar, pk=pk)
@@ -73,12 +84,14 @@ def cli(path, connection, all, table, skip, sql, pk, progress):
         for table, column, other_table, other_column in foreign_keys_to_add:
             # Make sure both tables exist and are not skipped - they may not
             # exist if they were empty and hence .upsert_all() didn't have a
-            # reason to create them
+            # reason to create them.
             if (
                 db[table].exists
                 and table not in skip
                 and db[other_table].exists
                 and other_table not in skip
+                # Also skip if this column is redacted
+                and ((table, column) not in redact)
             ):
                 foreign_keys_to_add_final.append(
                     (table, column, other_table, other_column)
@@ -113,3 +126,11 @@ def detect_primary_key(db_conn, table):
     if len(pks) > 1:
         raise click.ClickException("Multiple primary keys not currently supported")
     return pks[0] if pks else None
+
+
+def redacted_dict(row, redact):
+    d = dict(row)
+    for key in redact:
+        if key in d:
+            d[key] = "***"
+    return d

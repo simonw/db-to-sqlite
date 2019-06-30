@@ -1,5 +1,5 @@
 import pytest
-from .shared import shared_database_test
+from . import shared
 
 
 try:
@@ -75,5 +75,12 @@ def test_fixture(mysql_db):
 @pytest.mark.skipif(
     MySQLdb is None, reason="MySQLdb module not available - pip install mysqlclient"
 )
-def test_db_to_sqlite_to_sqlite(mysql_db, tmpdir):
-    shared_database_test("mysql://root@localhost/test_db_to_sqlite", tmpdir)
+def test_db_to_sqlite(mysql_db, tmpdir):
+    shared.shared_database_test("mysql://root@localhost/test_db_to_sqlite", tmpdir)
+
+
+@pytest.mark.skipif(
+    MySQLdb is None, reason="MySQLdb module not available - pip install mysqlclient"
+)
+def test_redact(mysql_db, tmpdir):
+    shared.shared_redact_test("mysql://root@localhost/test_db_to_sqlite", tmpdir)
