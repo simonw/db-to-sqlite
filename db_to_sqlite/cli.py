@@ -8,7 +8,7 @@ from sqlite_utils import Database
 @click.argument("connection")
 @click.argument("path", type=click.Path(exists=False), required=True)
 @click.option("--all", help="Detect and copy all tables", is_flag=True)
-@click.option("--table", help="Name of table to save the results (and copy)")
+@click.option("--table", help="Specific tables to copy", multiple=True)
 @click.option("--skip", help="When using --all skip these tables", multiple=True)
 @click.option(
     "--redact",
@@ -18,6 +18,7 @@ from sqlite_utils import Database
     multiple=True,
 )
 @click.option("--sql", help="Optional SQL query to run")
+@click.option("--output", help="Table in which to save --sql query results")
 @click.option("--pk", help="Optional column to use as a primary key")
 @click.option(
     "--index-fks/--no-index-fks",
@@ -25,7 +26,9 @@ from sqlite_utils import Database
     help="Should foreign keys have indexes? Default on",
 )
 @click.option("-p", "--progress", help="Show progress bar", is_flag=True)
-def cli(connection, path, all, table, skip, redact, sql, pk, index_fks, progress):
+def cli(
+    connection, path, all, table, skip, redact, sql, output, pk, index_fks, progress
+):
     """
     Load data from any database into SQLite.
 
@@ -41,8 +44,8 @@ def cli(connection, path, all, table, skip, redact, sql, pk, index_fks, progress
 
     More: https://docs.sqlalchemy.org/en/13/core/engines.html#database-urls
     """
-    if not all and not table:
-        raise click.ClickException("--all OR --table required")
+    if not all and not table and not sql:
+        raise click.ClickException("--all OR --table OR --sql required")
     if skip and not all:
         raise click.ClickException("--skip can only be used with --all")
     redact_columns = {}
@@ -50,10 +53,13 @@ def cli(connection, path, all, table, skip, redact, sql, pk, index_fks, progress
         redact_columns.setdefault(table_name, set()).add(column_name)
     db = Database(path)
     db_conn = create_engine(connection).connect()
+    inspector = inspect(db_conn)
+    # Figure out which tables we are copying, if any
+    tables = table
     if all:
-        inspector = inspect(db_conn)
-        foreign_keys_to_add = []
         tables = inspector.get_table_names()
+    if tables:
+        foreign_keys_to_add = []
         for i, table in enumerate(tables):
             if progress:
                 click.echo("{}/{}: {}".format(i + 1, len(tables), table), err=True)
@@ -63,8 +69,9 @@ def cli(connection, path, all, table, skip, redact, sql, pk, index_fks, progress
                 continue
             pks = inspector.get_pk_constraint(table)["constrained_columns"]
             if len(pks) > 1:
-                click.echo("Multiple primary keys not currently supported", err=True)
-                return
+                raise click.ClickException(
+                    "Multiple primary keys not currently supported"
+                )
             pk = None
             if pks:
                 pk = pks[0]
@@ -114,8 +121,9 @@ def cli(connection, path, all, table, skip, redact, sql, pk, index_fks, progress
             # Add using .add_foreign_keys() to avoid running multiple VACUUMs
             if progress:
                 click.echo(
-                    "\nAdding {} foreign keys\n{}".format(
+                    "\nAdding {} foreign key{}\n{}".format(
                         len(foreign_keys_to_add_final),
+                        "s" if len(foreign_keys_to_add_final) != 1 else "",
                         "\n".join(
                             "  {}.{} => {}.{}".format(*fk)
                             for fk in foreign_keys_to_add_final
@@ -124,14 +132,12 @@ def cli(connection, path, all, table, skip, redact, sql, pk, index_fks, progress
                     err=True,
                 )
             db.add_foreign_keys(foreign_keys_to_add_final)
-    else:
-        if not sql:
-            sql = "select * from {}".format(table)
-            if not pk:
-                pk = detect_primary_key(db_conn, table)
+    if sql:
+        if not output:
+            raise click.ClickException("--sql must be accompanied by --output")
         results = db_conn.execute(sql)
         rows = (dict(r) for r in results)
-        db[table].insert_all(rows, pk=pk)
+        db[output].insert_all(rows, pk=pk)
     if index_fks:
         db.index_foreign_keys()
 
