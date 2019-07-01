@@ -90,7 +90,7 @@ You can pass this to `db-to-sqlite` to create a local SQLite database with the d
 You can even do this using a bash one-liner:
 
     $ db-to-sqlite $(heroku config --app myappname | grep HEROKU_POSTG | cut -d: -f 2-) \
-        /tmp/wot.db --all -p
+        /tmp/heroku.db --all -p
     1/23: django_migrations
     ...
     17/23: blog_blogmark
