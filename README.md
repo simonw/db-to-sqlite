@@ -56,6 +56,8 @@ For example, to save the content of the `blog_entry` table from a PostgreSQL dat
     db-to-sqlite "postgresql://localhost/myblog" blog.db \
         --table=blog_entry
 
+You can specify `--table` more than once.
+
 You can also save the data from all of your tables, effectively creating a SQLite copy of your entire database. Any foreign key relationships will be detected and added to the SQLite database. For example:
 
     db-to-sqlite "postgresql://localhost/myblog" blog.db \
@@ -70,9 +72,11 @@ When running `--all` you can specify tables to skip using `--skip`:
 If you want to save the results of a custom SQL query, do this:
 
     db-to-sqlite "postgresql://localhost/myblog" output.db \
-        --table=query_results \
+        --output=query_results \
         --sql="select id, title, created from blog_entry" \
         --pk=id
+
+The `--output` option specifies the table that should contain the results of the query.
 
 ## Using db-to-sqlite with Heroku Postgres
 
