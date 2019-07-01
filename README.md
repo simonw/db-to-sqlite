@@ -63,3 +63,22 @@ If you want to save the results of a custom SQL query, do this:
         --table=query_results \
         --sql="select id, title, created from blog_entry" \
         --pk=id
+
+## Using db-to-sqlite with Heroku Postgres
+
+If you run an application on [Heroku](https://www.heroku.com/) using their [Postgres database product](https://www.heroku.com/postgres), you can use the `heroku config` command to access a compatible connection string:
+
+    $ heroku config --app myappname | grep HEROKU_POSTG
+    HEROKU_POSTGRESQL_OLIVE_URL: postgres://username:password@ec2-xxx-xxx-xxx-x.compute-1.amazonaws.com:5432/dbname
+
+You can pass this to `db-to-sqlite` to create a local SQLite database with the data from your Heroku instance.
+
+You can even do this using a bash one-liner:
+
+    $ db-to-sqlite $(heroku config --app myappname | grep HEROKU_POSTG | cut -d: -f 2-) \
+        /tmp/wot.db --all -p
+    1/23: django_migrations
+    ...
+    17/23: blog_blogmark
+    [####################################]  100%
+    ...
