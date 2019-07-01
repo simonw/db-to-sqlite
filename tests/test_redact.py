@@ -9,14 +9,13 @@ from .shared import all_databases
 
 @all_databases
 def test_redact(connection, tmpdir):
-    db_path = str(tmpdir / "test_reduct.db")
+    db_path = str(tmpdir / "test_redact.db")
     result = CliRunner().invoke(
         cli.cli,
         [
-            "--connection",
             connection,
-            "--all",
             db_path,
+            "--all",
             "--redact",
             "products",
             "name",

@@ -7,8 +7,8 @@ from sqlite_utils import Database
 
 @click.command()
 @click.version_option()
+@click.argument("connection")
 @click.argument("path", type=click.Path(exists=False), required=True)
-@click.option("--connection", required=True, help="SQLAlchemy connection string")
 @click.option("--all", help="Detect and copy all tables", is_flag=True)
 @click.option("--table", help="Name of table to save the results (and copy)")
 @click.option("--skip", help="When using --all skip these tables", multiple=True)
@@ -27,7 +27,7 @@ from sqlite_utils import Database
     help="Should foreign keys have indexes? Default on",
 )
 @click.option("-p", "--progress", help="Show progress bar", is_flag=True)
-def cli(path, connection, all, table, skip, redact, sql, pk, index_fks, progress):
+def cli(connection, path, all, table, skip, redact, sql, pk, index_fks, progress):
     """
     Load data from any database into SQLite.
     

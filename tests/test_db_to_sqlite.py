@@ -10,7 +10,7 @@ from .shared import all_databases
 @all_databases
 def test_db_to_sqlite(connection, tmpdir):
     db_path = str(tmpdir / "test.db")
-    result = CliRunner().invoke(cli.cli, ["--connection", connection, "--all", db_path])
+    result = CliRunner().invoke(cli.cli, [connection, db_path, "--all"])
     db = sqlite_utils.Database(db_path)
     assert {"categories", "products", "vendors"} == set(db.table_names())
     assert [
@@ -42,11 +42,11 @@ def test_index_fks(connection, tmpdir):
     db_path = str(tmpdir / "test_with_fks.db")
     # With --no-index-fks should create no indexes
     CliRunner().invoke(
-        cli.cli, ["--connection", connection, "--all", db_path, "--no-index-fks"]
+        cli.cli, [connection, db_path, "--all", "--no-index-fks"]
     )
     db = sqlite_utils.Database(db_path)
     assert [] == db["products"].indexes
     # Without it (the default) it should create the indexes
-    CliRunner().invoke(cli.cli, ["--connection", connection, "--all", db_path])
+    CliRunner().invoke(cli.cli, [connection, db_path, "--all"])
     db = sqlite_utils.Database(db_path)
     assert [["cat_id"], ["vendor_id"]] == [i.columns for i in db["products"].indexes]
