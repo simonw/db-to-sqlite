@@ -41,9 +41,7 @@ def test_db_to_sqlite(connection, tmpdir):
 def test_index_fks(connection, tmpdir):
     db_path = str(tmpdir / "test_with_fks.db")
     # With --no-index-fks should create no indexes
-    CliRunner().invoke(
-        cli.cli, [connection, db_path, "--all", "--no-index-fks"]
-    )
+    CliRunner().invoke(cli.cli, [connection, db_path, "--all", "--no-index-fks"])
     db = sqlite_utils.Database(db_path)
     assert [] == db["products"].indexes
     # Without it (the default) it should create the indexes

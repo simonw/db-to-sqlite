@@ -26,7 +26,17 @@ For PostgreSQL, use this:
 
       Load data from any database into SQLite.
 
-      https://github.com/simonw/db-to-sqlite
+      PATH is a path to the SQLite file to create, e.c. /tmp/my_database.db
+
+      CONNECTION is a SQLAlchemy connection string, for example:
+
+          postgresql://localhost/my_database
+          postgresql://username:passwd@localhost/my_database
+
+          mysql://root@localhost/my_database
+          mysql://username:passwd@localhost/my_database
+
+      More: https://docs.sqlalchemy.org/en/13/core/engines.html#database-urls
 
     Options:
       --version                     Show the version and exit.
@@ -39,7 +49,6 @@ For PostgreSQL, use this:
       --index-fks / --no-index-fks  Should foreign keys have indexes? Default on
       -p, --progress                Show progress bar
       --help                        Show this message and exit.
-
 
 For example, to save the content of the `blog_entry` table from a PostgreSQL database to a local file called `blog.db` you could do this:
 

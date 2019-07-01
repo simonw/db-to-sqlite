@@ -1,3 +1,4 @@
+import difflib
 from pathlib import Path
 
 from click.testing import CliRunner
@@ -15,8 +16,24 @@ def test_readme_contains_latest_help():
     help_text_indented = "\n".join(
         [
             ("    {}".format(line) if line.strip() else "")
-            for line in help_text.split("\n")
+            for line in help_text.splitlines()
         ]
     ).replace("Usage: cli ", "Usage: db-to-sqlite ")
     readme = readme_path.read_text()
-    assert help_text_indented in readme
+    # Compare to just lines starting with 'Usage: db-to-sqlite' and ending --help
+    relevant_lines = []
+    collecting = False
+    for line in readme.splitlines():
+        if collecting:
+            relevant_lines.append(line)
+            if line.strip().startswith("--help"):
+                break
+        elif line.strip().startswith("Usage: db-to-sqlite"):
+            relevant_lines.append(line)
+            collecting = True
+    relevant_text = "\n".join(relevant_lines)
+    if help_text_indented != relevant_text:
+        print("\n".join(
+            difflib.ndiff(relevant_text.splitlines(), help_text_indented.splitlines())
+        ))
+        assert False

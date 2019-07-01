@@ -30,8 +30,18 @@ from sqlite_utils import Database
 def cli(connection, path, all, table, skip, redact, sql, pk, index_fks, progress):
     """
     Load data from any database into SQLite.
-    
-    https://github.com/simonw/db-to-sqlite
+
+    PATH is a path to the SQLite file to create, e.c. /tmp/my_database.db
+
+    CONNECTION is a SQLAlchemy connection string, for example:
+
+        postgresql://localhost/my_database
+        postgresql://username:passwd@localhost/my_database
+
+        mysql://root@localhost/my_database
+        mysql://username:passwd@localhost/my_database
+
+    More: https://docs.sqlalchemy.org/en/13/core/engines.html#database-urls
     """
     if not all and not table:
         raise click.ClickException("--all OR --table required")
