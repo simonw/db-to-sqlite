@@ -96,3 +96,9 @@ You can even do this using a bash one-liner:
     17/23: blog_blogmark
     [####################################]  100%
     ...
+
+## Related projects
+
+* [Datasette](https://github.com/simonw/datasette): A tool for exploring and publishing data. Works great with SQLite files generated using `db-to-sqlite`.
+* [sqlite-utils](https://github.com/simonw/sqlite-utils): Python CLI utility and library for manipulating SQLite databases.
+* [csvs-to-sqlite](https://github.com/simonw/csvs-to-sqlite): Convert CSV files into a SQLite database.
