@@ -1,4 +1,6 @@
 import pytest
+from click.testing import CliRunner
+from db_to_sqlite import cli
 
 try:
     import MySQLdb
@@ -120,3 +122,11 @@ def setup_postgresql():
     db.commit()
     db.close()
     yield
+
+
+@pytest.fixture
+def cli_runner():
+    def inner(args, **kwargs):
+        return CliRunner().invoke(cli.cli, args, **kwargs)
+
+    return inner

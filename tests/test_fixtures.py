@@ -1,7 +1,5 @@
 import pytest
 
-from . import shared
-
 try:
     import MySQLdb
 except ImportError:

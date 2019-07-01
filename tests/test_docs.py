@@ -1,16 +1,11 @@
 import difflib
 from pathlib import Path
 
-from click.testing import CliRunner
-
-from db_to_sqlite.cli import cli
-
 readme_path = Path(__file__).parent.parent / "README.md"
 
 
-def test_readme_contains_latest_help():
-    runner = CliRunner()
-    result = runner.invoke(cli, ["--help"], terminal_width=88)
+def test_readme_contains_latest_help(cli_runner):
+    result = cli_runner(["--help"], terminal_width=88)
     help_text = result.output
     # The 4-space indented version of this should be in README.md
     help_text_indented = "\n".join(
@@ -33,7 +28,11 @@ def test_readme_contains_latest_help():
             collecting = True
     relevant_text = "\n".join(relevant_lines)
     if help_text_indented != relevant_text:
-        print("\n".join(
-            difflib.ndiff(relevant_text.splitlines(), help_text_indented.splitlines())
-        ))
+        print(
+            "\n".join(
+                difflib.ndiff(
+                    relevant_text.splitlines(), help_text_indented.splitlines()
+                )
+            )
+        )
         assert False

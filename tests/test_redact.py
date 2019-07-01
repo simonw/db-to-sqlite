@@ -1,17 +1,13 @@
 import sqlite_utils
-from click.testing import CliRunner
 from sqlite_utils.db import ForeignKey
-
-from db_to_sqlite import cli
 
 from .shared import all_databases
 
 
 @all_databases
-def test_redact(connection, tmpdir):
+def test_redact(connection, tmpdir, cli_runner):
     db_path = str(tmpdir / "test_redact.db")
-    result = CliRunner().invoke(
-        cli.cli,
+    result = cli_runner(
         [
             connection,
             db_path,
@@ -22,7 +18,7 @@ def test_redact(connection, tmpdir):
             "--redact",
             "products",
             "vendor_id",
-        ],
+        ]
     )
     assert 0 == result.exit_code, (result.output, result.exception)
     db = sqlite_utils.Database(db_path)

@@ -1,16 +1,13 @@
 import sqlite_utils
-from click.testing import CliRunner
 from sqlite_utils.db import ForeignKey
-
-from db_to_sqlite import cli
 
 from .shared import all_databases
 
 
 @all_databases
-def test_db_to_sqlite(connection, tmpdir):
+def test_db_to_sqlite(connection, tmpdir, cli_runner):
     db_path = str(tmpdir / "test.db")
-    result = CliRunner().invoke(cli.cli, [connection, db_path, "--all"])
+    cli_runner([connection, db_path, "--all"])
     db = sqlite_utils.Database(db_path)
     assert {"categories", "products", "vendors"} == set(db.table_names())
     assert [
@@ -38,13 +35,13 @@ def test_db_to_sqlite(connection, tmpdir):
 
 
 @all_databases
-def test_index_fks(connection, tmpdir):
+def test_index_fks(connection, tmpdir, cli_runner):
     db_path = str(tmpdir / "test_with_fks.db")
     # With --no-index-fks should create no indexes
-    CliRunner().invoke(cli.cli, [connection, db_path, "--all", "--no-index-fks"])
+    cli_runner([connection, db_path, "--all", "--no-index-fks"])
     db = sqlite_utils.Database(db_path)
     assert [] == db["products"].indexes
     # Without it (the default) it should create the indexes
-    CliRunner().invoke(cli.cli, [connection, db_path, "--all"])
+    cli_runner([connection, db_path, "--all"])
     db = sqlite_utils.Database(db_path)
     assert [["cat_id"], ["vendor_id"]] == [i.columns for i in db["products"].indexes]

@@ -1,5 +1,3 @@
-import sqlite3
-
 import click
 from sqlalchemy import create_engine, inspect
 from sqlite_utils import Database
