@@ -21,8 +21,13 @@ from sqlite_utils import Database
 )
 @click.option("--sql", help="Optional SQL query to run")
 @click.option("--pk", help="Optional column to use as a primary key")
+@click.option(
+    "--index-fks/--no-index-fks",
+    default=True,
+    help="Should foreign keys have indexes? Default on",
+)
 @click.option("-p", "--progress", help="Show progress bar", is_flag=True)
-def cli(path, connection, all, table, skip, redact, sql, pk, progress):
+def cli(path, connection, all, table, skip, redact, sql, pk, index_fks, progress):
     """
     Load data from any database into SQLite.
     
@@ -119,6 +124,8 @@ def cli(path, connection, all, table, skip, redact, sql, pk, progress):
         results = db_conn.execute(sql)
         rows = (dict(r) for r in results)
         db[table].insert_all(rows, pk=pk)
+    if index_fks:
+        db.index_foreign_keys()
 
 
 def detect_primary_key(db_conn, table):

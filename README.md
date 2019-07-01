@@ -29,16 +29,18 @@ For PostgreSQL, use this:
       https://github.com/simonw/db-to-sqlite
 
     Options:
-      --version          Show the version and exit.
-      --connection TEXT  SQLAlchemy connection string  [required]
-      --all              Detect and copy all tables
-      --table TEXT       Name of table to save the results (and copy)
-      --skip TEXT        When using --all skip these tables
-      --redact TEXT...   (table, column) pairs to redact with ***
-      --sql TEXT         Optional SQL query to run
-      --pk TEXT          Optional column to use as a primary key
-      -p, --progress     Show progress bar
-      --help             Show this message and exit.
+      --version                     Show the version and exit.
+      --connection TEXT             SQLAlchemy connection string  [required]
+      --all                         Detect and copy all tables
+      --table TEXT                  Name of table to save the results (and copy)
+      --skip TEXT                   When using --all skip these tables
+      --redact TEXT...              (table, column) pairs to redact with ***
+      --sql TEXT                    Optional SQL query to run
+      --pk TEXT                     Optional column to use as a primary key
+      --index-fks / --no-index-fks  Should foreign keys have indexes? Default on
+      -p, --progress                Show progress bar
+      --help                        Show this message and exit.
+
 
 For example, to save the content of the `blog_entry` table from a PostgreSQL database to a local file called `blog.db` you could do this:
 
