@@ -1,3 +1,4 @@
+import itertools
 import click
 from sqlalchemy import create_engine, inspect
 from sqlite_utils import Database
@@ -96,11 +97,18 @@ def cli(
             results = db_conn.execute("select * from {}".format(table))
             redact_these = redact_columns.get(table) or set()
             rows = (redacted_dict(r, redact_these) for r in results)
-            if progress:
-                with click.progressbar(rows, length=count) as bar:
-                    db[table].upsert_all(bar, pk=pk)
+            # Make sure generator is not empty
+            try:
+                first = next(rows)
+            except StopIteration:
+                pass
             else:
-                db[table].upsert_all(rows, pk=pk)
+                rows = itertools.chain([first], rows)
+                if progress:
+                    with click.progressbar(rows, length=count) as bar:
+                        db[table].upsert_all(bar, pk=pk)
+                else:
+                    db[table].upsert_all(rows, pk=pk)
         foreign_keys_to_add_final = []
         for table, column, other_table, other_column in foreign_keys_to_add:
             # Make sure both tables exist and are not skipped - they may not
