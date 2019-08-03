@@ -7,6 +7,7 @@ python:
 
 services:
   - mysql
+  - postgresql
 
 script:
   - pip install -U pip wheel black
