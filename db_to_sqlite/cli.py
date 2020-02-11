@@ -106,18 +106,18 @@ def cli(
                 rows = itertools.chain([first], rows)
                 if progress:
                     with click.progressbar(rows, length=count) as bar:
-                        db[table].upsert_all(bar, pk=pk)
+                        db[table].insert_all(bar, pk=pk, replace=True)
                 else:
-                    db[table].upsert_all(rows, pk=pk)
+                    db[table].insert_all(rows, pk=pk, replace=True)
         foreign_keys_to_add_final = []
         for table, column, other_table, other_column in foreign_keys_to_add:
             # Make sure both tables exist and are not skipped - they may not
-            # exist if they were empty and hence .upsert_all() didn't have a
+            # exist if they were empty and hence .insert_all() didn't have a
             # reason to create them.
             if (
-                db[table].exists
+                db[table].exists()
                 and table not in skip
-                and db[other_table].exists
+                and db[other_table].exists()
                 and other_table not in skip
                 # Also skip if this column is redacted
                 and ((table, column) not in redact)
