@@ -127,6 +127,6 @@ def setup_postgresql():
 @pytest.fixture
 def cli_runner():
     def inner(args, **kwargs):
-        return CliRunner().invoke(cli.cli, args, **kwargs)
+        return CliRunner().invoke(cli.cli, args, catch_exceptions=False, **kwargs)
 
     return inner
