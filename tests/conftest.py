@@ -66,6 +66,7 @@ CREATE TABLE IF NOT EXISTS products (
 
 DELETE FROM products;
 DELETE FROM categories;
+DELETE FROM vendors;
 
 INSERT INTO categories (id, name) VALUES (1, 'Junk');
 INSERT INTO vendors (id, name) VALUES (1, 'Acme Corp');
@@ -127,6 +128,6 @@ def setup_postgresql():
 @pytest.fixture
 def cli_runner():
     def inner(args, **kwargs):
-        return CliRunner().invoke(cli.cli, args, **kwargs)
+        return CliRunner().invoke(cli.cli, args, catch_exceptions=False, **kwargs)
 
     return inner
