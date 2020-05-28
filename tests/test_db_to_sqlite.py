@@ -11,10 +11,7 @@ def test_db_to_sqlite(connection, tmpdir, cli_runner):
     db = sqlite_utils.Database(db_path)
     assert {"categories", "products", "vendors"} == set(db.table_names())
     assert [
-        # Slight oddity: vendor_id comes out as a string even though MySQL
-        # defined it as an integer because sqlite-utils treats mixed
-        # integer + null as a string type, not an integer type
-        {"id": 1, "name": "Bobcat Statue", "cat_id": 1, "vendor_id": "1"},
+        {"id": 1, "name": "Bobcat Statue", "cat_id": 1, "vendor_id": 1},
         {"id": 2, "name": "Yoga Scarf", "cat_id": 1, "vendor_id": None},
     ] == list(db["products"].rows)
     assert [{"id": 1, "name": "Junk"}] == list(db["categories"].rows)
