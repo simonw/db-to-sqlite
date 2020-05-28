@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import io
 import os
 
-VERSION = "1.1.1"
+VERSION = "1.2"
 
 
 def get_long_description():
@@ -22,7 +22,7 @@ setup(
     version=VERSION,
     license="Apache License, Version 2.0",
     packages=find_packages(),
-    install_requires=["sqlalchemy", "sqlite-utils~=2.3.1", "click"],
+    install_requires=["sqlalchemy", "sqlite-utils~=2.9.1", "click"],
     extras_require={
         "test": ["pytest"],
         "test_mysql": ["pytest", "mysqlclient"],
