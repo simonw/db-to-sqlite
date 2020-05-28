@@ -1,6 +1,7 @@
 # db-to-sqlite
 
 [![PyPI](https://img.shields.io/pypi/v/db-to-sqlite.svg)](https://pypi.python.org/pypi/db-to-sqlite)
+[![Changelog](https://img.shields.io/github/v/release/simonw/db-to-sqlite?include_prereleases&label=changelog)](https://github.com/simonw/db-to-sqlite/releases)
 [![Travis CI](https://travis-ci.com/simonw/db-to-sqlite.svg?branch=master)](https://travis-ci.com/simonw/db-to-sqlite)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/simonw/db-to-sqlite/blob/master/LICENSE)
 
