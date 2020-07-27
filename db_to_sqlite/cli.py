@@ -69,13 +69,8 @@ def cli(
                     click.echo("  ... skipping", err=True)
                 continue
             pks = inspector.get_pk_constraint(table)["constrained_columns"]
-            if len(pks) > 1:
-                raise click.ClickException(
-                    "Multiple primary keys not currently supported"
-                )
-            pk = None
-            if pks:
-                pk = pks[0]
+            if len(pks) == 1:
+                pks = pks[0]
             fks = inspector.get_foreign_keys(table)
             foreign_keys_to_add.extend(
                 [
@@ -106,9 +101,9 @@ def cli(
                 rows = itertools.chain([first], rows)
                 if progress:
                     with click.progressbar(rows, length=count) as bar:
-                        db[table].insert_all(bar, pk=pk, replace=True)
+                        db[table].insert_all(bar, pk=pks, replace=True)
                 else:
-                    db[table].insert_all(rows, pk=pk, replace=True)
+                    db[table].insert_all(rows, pk=pks, replace=True)
         foreign_keys_to_add_final = []
         for table, column, other_table, other_column in foreign_keys_to_add:
             # Make sure both tables exist and are not skipped - they may not

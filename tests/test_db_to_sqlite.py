@@ -9,7 +9,9 @@ def test_db_to_sqlite(connection, tmpdir, cli_runner):
     db_path = str(tmpdir / "test.db")
     cli_runner([connection, db_path, "--all"])
     db = sqlite_utils.Database(db_path)
-    assert {"categories", "products", "vendors"} == set(db.table_names())
+    assert {"categories", "products", "vendors", "vendor_categories"} == set(
+        db.table_names()
+    )
     assert [
         {"id": 1, "name": "Bobcat Statue", "cat_id": 1, "vendor_id": 1},
         {"id": 2, "name": "Yoga Scarf", "cat_id": 1, "vendor_id": None},
