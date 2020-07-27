@@ -18,7 +18,12 @@ def test_fixture_mysql():
     cursor = db.cursor()
     cursor.execute("show tables")
     try:
-        assert {("categories",), ("vendors",), ("products",)} == set(cursor.fetchall())
+        assert {
+            ("categories",),
+            ("vendors",),
+            ("products",),
+            ("vendor_categories",),
+        } == set(cursor.fetchall())
     finally:
         db.close()
 
@@ -39,4 +44,9 @@ def test_fixture_postgresql():
     """
     )
     rows = cursor.fetchall()
-    assert {("categories",), ("vendors",), ("products",)} == set(rows)
+    assert {
+        ("categories",),
+        ("vendor_categories",),
+        ("products",),
+        ("vendors",),
+    } == set(rows)

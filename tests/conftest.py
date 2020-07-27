@@ -22,6 +22,12 @@ CREATE TABLE IF NOT EXISTS vendors (
     name varchar(32) not null
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS vendor_categories (
+    cat_id int not null,
+    vendor_id int not null,
+    PRIMARY KEY (cat_id, vendor_id)
+) ENGINE=InnoDB;
+
 CREATE TABLE IF NOT EXISTS products (
     id int not null auto_increment primary key,
     name varchar(32) not null,
@@ -42,6 +48,9 @@ INSERT INTO products (id, name, cat_id, vendor_id)
     VALUES (1, "Bobcat Statue", 1, 1);
 INSERT INTO products (id, name, cat_id, vendor_id)
     VALUES (2, "Yoga Scarf", 1, null);
+
+INSERT INTO vendor_categories (cat_id, vendor_id)
+    VALUES (1, 1);
 """
 
 POSTGRESQL_SQL = """
@@ -53,6 +62,12 @@ CREATE TABLE IF NOT EXISTS categories (
 CREATE TABLE IF NOT EXISTS vendors (
     id int not null primary key,
     name varchar(32) not null
+);
+
+CREATE TABLE IF NOT EXISTS vendor_categories (
+    cat_id int not null,
+    vendor_id int not null,
+    PRIMARY KEY (cat_id, vendor_id)
 );
 
 CREATE TABLE IF NOT EXISTS products (
@@ -67,6 +82,7 @@ CREATE TABLE IF NOT EXISTS products (
 DELETE FROM products;
 DELETE FROM categories;
 DELETE FROM vendors;
+DELETE FROM vendor_categories;
 
 INSERT INTO categories (id, name) VALUES (1, 'Junk');
 INSERT INTO vendors (id, name) VALUES (1, 'Acme Corp');
@@ -74,6 +90,9 @@ INSERT INTO products (id, name, cat_id, vendor_id)
     VALUES (1, 'Bobcat Statue', 1, 1);
 INSERT INTO products (id, name, cat_id, vendor_id)
     VALUES (2, 'Yoga Scarf', 1, null);
+
+INSERT INTO vendor_categories (cat_id, vendor_id)
+    VALUES (1, 1);
 """
 
 
