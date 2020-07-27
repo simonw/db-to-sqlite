@@ -17,6 +17,8 @@ def test_db_to_sqlite(connection, tmpdir, cli_runner):
         {"id": 2, "name": "Yoga Scarf", "cat_id": 1, "vendor_id": None},
     ] == list(db["products"].rows)
     assert [{"id": 1, "name": "Junk"}] == list(db["categories"].rows)
+    assert [{"cat_id": 1, "vendor_id": 1}] == list(db["vendor_categories"].rows)
+    # Check foreign keys
     assert [
         ForeignKey(
             table="products",
@@ -31,6 +33,8 @@ def test_db_to_sqlite(connection, tmpdir, cli_runner):
             other_column="id",
         ),
     ] == sorted(db["products"].foreign_keys)
+    # Confirm vendor_categories has a compound primary key
+    assert db["vendor_categories"].pks == ["cat_id", "vendor_id"]
 
 
 @all_databases
