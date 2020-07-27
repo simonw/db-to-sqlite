@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import io
 import os
 
-VERSION = "1.2"
+VERSION = "1.2.1"
 
 
 def get_long_description():
@@ -36,6 +36,13 @@ setup(
         db-to-sqlite=db_to_sqlite.cli:cli
     """,
     url="https://github.com/simonw/db-to-sqlite",
+    project_urls={
+        "Documentation": "https://github.com/simonw/db-to-sqlite/blob/master/README.md",
+        "Changelog": "https://github.com/simonw/db-to-sqlite/releases",
+        "Source code": "https://github.com/simonw/db-to-sqlite",
+        "Issues": "https://github.com/simonw/db-to-sqlite/issues",
+        "CI": "https://travis-ci.com/simonw/db-to-sqlite",
+    },
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
