@@ -48,6 +48,9 @@ INSERT INTO products (id, name, cat_id, vendor_id)
     VALUES (1, "Bobcat Statue", 1, 1);
 INSERT INTO products (id, name, cat_id, vendor_id)
     VALUES (2, "Yoga Scarf", 1, null);
+
+INSERT INTO vendor_categories (cat_id, vendor_id)
+    VALUES (1, 1);
 """
 
 POSTGRESQL_SQL = """
