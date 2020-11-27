@@ -15,13 +15,13 @@ Install from PyPI like so:
 
 If you want to use it with MySQL, you can install the extra dependency like this:
 
-    pip install db-to-sqlite[mysql]
+    pip install 'db-to-sqlite[mysql]'
 
 Installing the `mysqlclient` library on OS X can be tricky - I've found [this recipe](https://gist.github.com/simonw/90ac0afd204cd0d6d9c3135c3888d116) to work (run that before installing `db-to-sqlite`).
 
 For PostgreSQL, use this:
 
-    pip install db-to-sqlite[postgresql]
+    pip install 'db-to-sqlite[postgresql]'
 
 ## Usage
 
