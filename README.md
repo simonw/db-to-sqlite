@@ -52,6 +52,7 @@ For PostgreSQL, use this:
       --pk TEXT                     Optional column to use as a primary key
       --index-fks / --no-index-fks  Should foreign keys have indexes? Default on
       -p, --progress                Show progress bar
+      --postgres-schema TEXT        PostgreSQL schema to use
       --help                        Show this message and exit.
 
 For example, to save the content of the `blog_entry` table from a PostgreSQL database to a local file called `blog.db` you could do this:
@@ -80,6 +81,13 @@ If you want to save the results of a custom SQL query, do this:
         --pk=id
 
 The `--output` option specifies the table that should contain the results of the query.
+
+## Using db-to-sqlite with Postgres schemas
+If the tables you want to copy from your PostgreSQL database aren't in the default schema, you can specify an alternate one with the `--postgres-schema` option:
+
+    db-to-sqlite "postgresql://localhost/myblog" blog.db \
+        --all \
+        --postgres-schema my_schema
 
 ## Using db-to-sqlite with Heroku Postgres
 
