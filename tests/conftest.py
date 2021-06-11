@@ -1,6 +1,8 @@
 import pytest
 from click.testing import CliRunner
 from db_to_sqlite import cli
+from sqlalchemy.engine.url import make_url
+from .shared import MYSQL_TEST_DB_CONNECTION, POSTGRESQL_TEST_DB_CONNECTION
 
 try:
     import MySQLdb
@@ -118,19 +120,20 @@ def setup_mysql():
     if MySQLdb is None:
         yield
         return
-    db = MySQLdb.connect(user="root", passwd="")
+    bits = make_url(MYSQL_TEST_DB_CONNECTION)
+    db = MySQLdb.connect(user=bits.username, passwd=bits.password or "", host=bits.host)
     cursor = db.cursor()
-    cursor.execute("CREATE DATABASE IF NOT EXISTS test_db_to_sqlite;")
-    cursor.execute("USE test_db_to_sqlite;")
+    cursor.execute("CREATE DATABASE IF NOT EXISTS {};".format(bits.database))
+    cursor.execute("USE {};".format(bits.database))
     cursor.execute(MYSQL_SQL)
     cursor.close()
     db.commit()
     db.close()
     yield
     # teardown_stuff
-    db = MySQLdb.connect(user="root", passwd="")
+    db = MySQLdb.connect(user=bits.username, passwd=bits.password or "", host=bits.host)
     cursor = db.cursor()
-    cursor.execute("DROP DATABASE test_db_to_sqlite;")
+    cursor.execute("DROP DATABASE {};".format(bits.database))
     cursor.close()
     db.commit()
     db.close()
@@ -141,18 +144,19 @@ def setup_postgresql():
     if psycopg2 is None:
         yield
         return
-    db = psycopg2.connect(user="postgres", password="postgres")
+    bits = make_url(POSTGRESQL_TEST_DB_CONNECTION)
+    db = psycopg2.connect(user=bits.username, password=bits.password, host=bits.host)
     db.autocommit = True
     cursor = db.cursor()
     cursor.execute("SELECT datname FROM pg_database;")
     databases = [r[0] for r in cursor.fetchall()]
-    if "test_db_to_sqlite" in databases:
-        cursor.execute("DROP DATABASE test_db_to_sqlite;")
-    cursor.execute("CREATE DATABASE test_db_to_sqlite;")
+    if bits.database in databases:
+        cursor.execute("DROP DATABASE {};".format(bits.database))
+    cursor.execute("CREATE DATABASE {};".format(bits.database))
     cursor.close()
     db.commit()
     db.close()
-    db = psycopg2.connect(user="postgres", dbname="test_db_to_sqlite")
+    db = psycopg2.connect(user=bits.username, password=bits.password, host=bits.host, dbname=bits.database)
     db.autocommit = True
     cursor = db.cursor()
     cursor.execute(POSTGRESQL_SQL)

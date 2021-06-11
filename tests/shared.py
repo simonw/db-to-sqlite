@@ -1,4 +1,5 @@
 import pytest
+import os
 
 try:
     import MySQLdb
@@ -9,6 +10,13 @@ try:
 except ImportError:
     psycopg2 = None
 
+MYSQL_TEST_DB_CONNECTION = os.environ.get(
+    "MYSQL_TEST_DB_CONNECTION", "mysql://root@localhost/test_db_to_sqlite"
+)
+POSTGRESQL_TEST_DB_CONNECTION = os.environ.get(
+    "POSTGRESQL_TEST_DB_CONNECTION", "postgresql://localhost/test_db_to_sqlite"
+)
+
 
 def all_databases(fn):
     "Decorator which parameterizes test function for mysql and postgresql"
@@ -16,13 +24,13 @@ def all_databases(fn):
         "connection",
         [
             pytest.param(
-                "mysql://root@localhost/test_db_to_sqlite",
+                MYSQL_TEST_DB_CONNECTION,
                 marks=pytest.mark.skipif(
                     MySQLdb is None, reason="pip install mysqlclient"
                 ),
             ),
             pytest.param(
-                "postgresql://localhost/test_db_to_sqlite",
+                POSTGRESQL_TEST_DB_CONNECTION,
                 marks=pytest.mark.skipif(
                     psycopg2 is None, reason="pip install psycopg2"
                 ),
