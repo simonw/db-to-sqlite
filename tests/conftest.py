@@ -1,7 +1,9 @@
 import pytest
 from click.testing import CliRunner
-from db_to_sqlite import cli
 from sqlalchemy.engine.url import make_url
+
+from db_to_sqlite import cli
+
 from .shared import MYSQL_TEST_DB_CONNECTION, POSTGRESQL_TEST_DB_CONNECTION
 
 try:

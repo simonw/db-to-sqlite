@@ -1,7 +1,8 @@
+import pytest
 import sqlite_utils
 from sqlite_utils.db import ForeignKey
-import pytest
-from .shared import all_databases, psycopg2, POSTGRESQL_TEST_DB_CONNECTION
+
+from .shared import POSTGRESQL_TEST_DB_CONNECTION, all_databases, psycopg2
 
 
 @all_databases

@@ -1,5 +1,6 @@
 import pytest
 from sqlalchemy.engine.url import make_url
+
 from .shared import MYSQL_TEST_DB_CONNECTION, POSTGRESQL_TEST_DB_CONNECTION
 
 try:
