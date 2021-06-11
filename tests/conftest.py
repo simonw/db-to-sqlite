@@ -46,6 +46,12 @@ CREATE TABLE IF NOT EXISTS user (
     name varchar(32) not null
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS empty_table (
+    id int not null auto_increment primary key,
+    name varchar(32) not null,
+    ip varchar(15)
+) ENGINE=InnoDB;
+
 DELETE FROM products;
 DELETE FROM categories;
 DELETE FROM user;
@@ -89,9 +95,16 @@ CREATE TABLE IF NOT EXISTS products (
     FOREIGN KEY (cat_id) REFERENCES categories(id),
     FOREIGN KEY (vendor_id) REFERENCES vendors(id)
 );
+
 CREATE TABLE IF NOT EXISTS "user" (
     id int not null primary key,
     name varchar(32) not null
+);
+
+CREATE TABLE IF NOT EXISTS empty_table (
+    id int not null primary key,
+    name varchar(32) not null,
+    ip inet
 );
 
 DELETE FROM products;

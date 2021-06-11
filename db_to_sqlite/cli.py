@@ -113,7 +113,16 @@ def cli(
             try:
                 first = next(rows)
             except StopIteration:
-                pass
+                # This is an empty table - create an empty copy
+                if not db[table].exists():
+                    create_columns = {}
+                    for column in inspector.get_columns(table):
+                        try:
+                            column_type = column["type"].python_type
+                        except NotImplementedError:
+                            column_type = str
+                        create_columns[column["name"]] = column_type
+                    db[table].create(create_columns)
             else:
                 rows = itertools.chain([first], rows)
                 if progress:
