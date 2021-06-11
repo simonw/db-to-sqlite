@@ -105,3 +105,33 @@ You can even do this using a bash one-liner:
 * [Datasette](https://github.com/simonw/datasette): A tool for exploring and publishing data. Works great with SQLite files generated using `db-to-sqlite`.
 * [sqlite-utils](https://github.com/simonw/sqlite-utils): Python CLI utility and library for manipulating SQLite databases.
 * [csvs-to-sqlite](https://github.com/simonw/csvs-to-sqlite): Convert CSV files into a SQLite database.
+
+## Development
+
+To set up this tool locally, first checkout the code. Then create a new virtual environment:
+
+    cd db-to-sqlite
+    python3 -mvenv venv
+    source venv/bin/activate
+
+Or if you are using `pipenv`:
+
+    pipenv shell
+
+Now install the dependencies and test dependencies:
+
+    pip install -e '.[test]'
+
+To run the tests:
+
+    pytest
+
+This will skip tests against MySQL or PostgreSQL if you do not have their additional dependencies installed.
+
+You can install those extra dependencies like so:
+
+    pip install -e '.[test_mysql,test_postgresql]'
+
+You can alternative use `pip install psycopg2-binary` if you cannot install the `psycopg2` dependency used by the `test_postgresql` extra.
+
+See [Running a MySQL server using Homebrew](https://til.simonwillison.net/homebrew/mysql-homebrew) for tips on running the tests against MySQL on macOS, including how to install the `mysqlclient` dependency.
