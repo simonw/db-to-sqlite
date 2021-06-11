@@ -122,10 +122,11 @@ def setup_mysql():
         return
     bits = make_url(MYSQL_TEST_DB_CONNECTION)
     kwargs = {
-        "user": bits.username,
         "passwd": bits.password or "",
         "host": bits.host,
     }
+    if bits.username:
+        kwargs["user"] = bits.username
     if bits.port:
         kwargs["port"] = int(bits.port)
     db = MySQLdb.connect(**kwargs)
