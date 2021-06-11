@@ -44,5 +44,5 @@ jobs:
         pip install -e '.[test,test_postgresql]'
     - name: Run tests
       run: |
-        POSTGRESQL_TEST_DB_CONNECTION=postgresql://postgres:password@localhost:5432/test_db_to_sqlite \
+        POSTGRESQL_TEST_DB_CONNECTION=postgresql://postgres:postgres@localhost:5432/test_db_to_sqlite \
           pytest
