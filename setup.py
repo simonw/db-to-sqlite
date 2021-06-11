@@ -1,6 +1,7 @@
-from setuptools import setup, find_packages
 import io
 import os
+
+from setuptools import find_packages, setup
 
 VERSION = "1.4"
 
