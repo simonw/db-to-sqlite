@@ -61,7 +61,7 @@ def test_specific_tables(connection, tmpdir, cli_runner):
     db = sqlite_utils.Database(db_path)
     assert {"categories", "products"} == set(db.table_names())
     assert (
-        "1/2: categories\n2/2: products\n\nAdding 1 foreign key\n  products.cat_id => categories.id\n"
+        "1/2: categories\n\n2/2: products\n\n\nAdding 1 foreign key\n  products.cat_id => categories.id\n"
         == result.output
     )
 

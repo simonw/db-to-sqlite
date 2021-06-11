@@ -1,4 +1,6 @@
 import pytest
+from sqlalchemy.engine.url import make_url
+from .shared import MYSQL_TEST_DB_CONNECTION, POSTGRESQL_TEST_DB_CONNECTION
 
 try:
     import MySQLdb
@@ -14,7 +16,10 @@ except ImportError:
     MySQLdb is None, reason="MySQLdb module not available - pip install mysqlclient"
 )
 def test_fixture_mysql():
-    db = MySQLdb.connect(user="root", passwd="", db="test_db_to_sqlite")
+    bits = make_url(MYSQL_TEST_DB_CONNECTION)
+    db = MySQLdb.connect(
+        user=bits.username, passwd=bits.password or "", host=bits.host, db=bits.database
+    )
     cursor = db.cursor()
     cursor.execute("show tables")
     try:
@@ -33,7 +38,10 @@ def test_fixture_mysql():
     psycopg2 is None, reason="psycopg2 module not available - pip install psycopg2"
 )
 def test_fixture_postgresql():
-    db = psycopg2.connect(user="postgres", dbname="test_db_to_sqlite")
+    bits = make_url(POSTGRESQL_TEST_DB_CONNECTION)
+    db = psycopg2.connect(
+        user=bits.username, password=bits.password, host=bits.host, dbname=bits.database
+    )
     db.autocommit = True
     cursor = db.cursor()
     cursor.execute(
