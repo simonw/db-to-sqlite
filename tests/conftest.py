@@ -141,7 +141,7 @@ def setup_postgresql():
     if psycopg2 is None:
         yield
         return
-    db = psycopg2.connect(user="postgres")
+    db = psycopg2.connect(user="postgres", password="postgres")
     db.autocommit = True
     cursor = db.cursor()
     cursor.execute("SELECT datname FROM pg_database;")
