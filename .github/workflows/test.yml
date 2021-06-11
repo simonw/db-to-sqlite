@@ -47,4 +47,4 @@ jobs:
     - name: Run tests
       env:
         POSTGRESQL_TEST_DB_CONNECTION: postgresql://postgres:postgres@127.0.0.1:${{ job.services.postgres.ports['5432'] }}/test_db_to_sqlite
-      run: pytest
+      run: pytest -vv
