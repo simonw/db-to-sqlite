@@ -135,3 +135,10 @@ You can install those extra dependencies like so:
 You can alternative use `pip install psycopg2-binary` if you cannot install the `psycopg2` dependency used by the `test_postgresql` extra.
 
 See [Running a MySQL server using Homebrew](https://til.simonwillison.net/homebrew/mysql-homebrew) for tips on running the tests against MySQL on macOS, including how to install the `mysqlclient` dependency.
+
+The PostgreSQL and MySQL tests default to expecting to run against servers on localhost. You can use environment variables to point them at different test database servers:
+
+- `MYSQL_TEST_DB_CONNECTION` - defaults to `mysql://root@localhost/test_db_to_sqlite`
+- `POSTGRESQL_TEST_DB_CONNECTION` - defaults to `postgresql://localhost/test_db_to_sqlite`
+
+The database you indicate in the environment variable - `test_db_to_sqlite` by default - will be deleted and recreated on every test run.
