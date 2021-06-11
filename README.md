@@ -82,7 +82,8 @@ If you want to save the results of a custom SQL query, do this:
 
 The `--output` option specifies the table that should contain the results of the query.
 
-## Using db-to-sqlite with Postgres schemas
+## Using db-to-sqlite with PostgreSQL schemas
+
 If the tables you want to copy from your PostgreSQL database aren't in the default schema, you can specify an alternate one with the `--postgres-schema` option:
 
     db-to-sqlite "postgresql://localhost/myblog" blog.db \
