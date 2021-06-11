@@ -41,7 +41,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install -e '.[test,test_mysql,test_postgresql]'
+        pip install -e '.[test,test_postgresql]'
     - name: Run tests
       run: |
         pytest
