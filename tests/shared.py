@@ -35,5 +35,12 @@ def all_databases(fn):
                     psycopg2 is None, reason="pip install psycopg2"
                 ),
             ),
+            # Make sure it works with postgres:// connection strings too
+            pytest.param(
+                POSTGRESQL_TEST_DB_CONNECTION.replace("postgresql://", "postgres://"),
+                marks=pytest.mark.skipif(
+                    psycopg2 is None, reason="pip install psycopg2"
+                ),
+            ),
         ],
     )(fn)

@@ -69,6 +69,8 @@ def cli(
         conn_args = {"options": "-csearch_path={}".format(postgres_schema)}
     else:
         conn_args = {}
+    if connection.startswith("postgres://"):
+        connection = connection.replace("postgres://", "postgresql://")
     db_conn = create_engine(connection, connect_args=conn_args).connect()
     inspector = inspect(db_conn)
     # Figure out which tables we are copying, if any
