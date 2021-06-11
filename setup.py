@@ -1,9 +1,8 @@
+from setuptools import setup, find_packages
 import io
 import os
 
-from setuptools import find_packages, setup
-
-VERSION = "1.3"
+VERSION = "1.4"
 
 
 def get_long_description():
