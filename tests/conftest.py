@@ -156,7 +156,9 @@ def setup_postgresql():
     cursor.close()
     db.commit()
     db.close()
-    db = psycopg2.connect(user=bits.username, password=bits.password, host=bits.host, dbname=bits.database)
+    db = psycopg2.connect(
+        user=bits.username, password=bits.password, host=bits.host, dbname=bits.database
+    )
     db.autocommit = True
     cursor = db.cursor()
     cursor.execute(POSTGRESQL_SQL)
