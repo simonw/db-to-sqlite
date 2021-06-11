@@ -27,6 +27,8 @@ jobs:
           MYSQL_DATABASE: test_db_to_sqlite
         options: >-
           --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        ports:
+          - 3306:3306
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -43,8 +45,9 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install -e '.[test,test_postgresql]'
+        pip install -e '.[test,test_postgresql,test_mysql]'
     - name: Run tests
       env:
         POSTGRESQL_TEST_DB_CONNECTION: postgresql://postgres:postgres@127.0.0.1:${{ job.services.postgres.ports['5432'] }}/test_db_to_sqlite
+        MYSQL_TEST_DB_CONNECTION: mysql://127.0.0.1:${{ job.services.mysql.ports['3306'] }}/test_db_to_sqlite
       run: pytest -vv
