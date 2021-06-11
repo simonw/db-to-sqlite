@@ -23,8 +23,8 @@ def test_redact(connection, tmpdir, cli_runner):
     assert 0 == result.exit_code, (result.output, result.exception)
     db = sqlite_utils.Database(db_path)
     assert [
-        {"id": 1, "name": "***", "cat_id": 1, "vendor_id": "***"},
-        {"id": 2, "name": "***", "cat_id": 1, "vendor_id": "***"},
+        {"id": 1, "name": "***", "cat_id": 1, "vendor_id": "***", "price": None},
+        {"id": 2, "name": "***", "cat_id": 1, "vendor_id": "***", "price": 2.1},
     ] == list(db["products"].rows)
     assert [
         ForeignKey(

@@ -18,8 +18,8 @@ def test_db_to_sqlite(connection, tmpdir, cli_runner):
         "empty_table",
     } == set(db.table_names())
     assert [
-        {"id": 1, "name": "Bobcat Statue", "cat_id": 1, "vendor_id": 1},
-        {"id": 2, "name": "Yoga Scarf", "cat_id": 1, "vendor_id": None},
+        {"id": 1, "name": "Bobcat Statue", "cat_id": 1, "vendor_id": 1, "price": None},
+        {"id": 2, "name": "Yoga Scarf", "cat_id": 1, "vendor_id": None, "price": 2.1},
     ] == list(db["products"].rows)
     assert [{"id": 1, "name": "Junk"}] == list(db["categories"].rows)
     assert [{"cat_id": 1, "vendor_id": 1}] == list(db["vendor_categories"].rows)

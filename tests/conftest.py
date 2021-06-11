@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS products (
     name varchar(32) not null,
     cat_id int not null,
     vendor_id int,
+    price decimal(2,1),
     FOREIGN KEY fk_cat(cat_id) REFERENCES categories(id)
         ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY fk_vendor(vendor_id) REFERENCES vendors(id)
@@ -60,8 +61,8 @@ INSERT INTO categories (id, name) VALUES (1, "Junk");
 INSERT INTO vendors (id, name) VALUES (1, "Acme Corp");
 INSERT INTO products (id, name, cat_id, vendor_id)
     VALUES (1, "Bobcat Statue", 1, 1);
-INSERT INTO products (id, name, cat_id, vendor_id)
-    VALUES (2, "Yoga Scarf", 1, null);
+INSERT INTO products (id, name, cat_id, vendor_id, price)
+    VALUES (2, "Yoga Scarf", 1, null, 2.1);
 
 INSERT INTO vendor_categories (cat_id, vendor_id)
     VALUES (1, 1);
@@ -92,6 +93,7 @@ CREATE TABLE IF NOT EXISTS products (
     name varchar(32) not null,
     cat_id int not null,
     vendor_id int,
+    price numeric(2,1),
     FOREIGN KEY (cat_id) REFERENCES categories(id),
     FOREIGN KEY (vendor_id) REFERENCES vendors(id)
 );
@@ -117,8 +119,8 @@ INSERT INTO categories (id, name) VALUES (1, 'Junk');
 INSERT INTO vendors (id, name) VALUES (1, 'Acme Corp');
 INSERT INTO products (id, name, cat_id, vendor_id)
     VALUES (1, 'Bobcat Statue', 1, 1);
-INSERT INTO products (id, name, cat_id, vendor_id)
-    VALUES (2, 'Yoga Scarf', 1, null);
+INSERT INTO products (id, name, cat_id, vendor_id, price)
+    VALUES (2, 'Yoga Scarf', 1, null, 2.1);
 
 INSERT INTO vendor_categories (cat_id, vendor_id)
     VALUES (1, 1);
