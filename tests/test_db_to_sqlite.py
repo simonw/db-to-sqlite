@@ -9,7 +9,7 @@ def test_db_to_sqlite(connection, tmpdir, cli_runner):
     db_path = str(tmpdir / "test.db")
     cli_runner([connection, db_path, "--all"])
     db = sqlite_utils.Database(db_path)
-    assert {"categories", "products", "vendors", "vendor_categories"} == set(
+    assert {"categories", "products", "vendors", "vendor_categories", "user"} == set(
         db.table_names()
     )
     assert [
@@ -18,6 +18,7 @@ def test_db_to_sqlite(connection, tmpdir, cli_runner):
     ] == list(db["products"].rows)
     assert [{"id": 1, "name": "Junk"}] == list(db["categories"].rows)
     assert [{"cat_id": 1, "vendor_id": 1}] == list(db["vendor_categories"].rows)
+    assert [{"id": 1, "name": "Lila"}] == list(db["user"].rows)
     # Check foreign keys
     assert [
         ForeignKey(

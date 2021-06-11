@@ -23,6 +23,7 @@ def test_fixture_mysql():
             ("vendors",),
             ("products",),
             ("vendor_categories",),
+            ("user",),
         } == set(cursor.fetchall())
     finally:
         db.close()
@@ -49,4 +50,5 @@ def test_fixture_postgresql():
         ("vendor_categories",),
         ("products",),
         ("vendors",),
+        ("user",),
     } == set(rows)

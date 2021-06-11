@@ -85,11 +85,12 @@ def cli(
                 ]
             )
             count = None
+            table_quoted = db_conn.dialect.identifier_preparer.quote_identifier(table)
             if progress:
                 count = db_conn.execute(
-                    "select count(*) from {}".format(table)
+                    "select count(*) from {}".format(table_quoted)
                 ).fetchone()[0]
-            results = db_conn.execute("select * from {}".format(table))
+            results = db_conn.execute("select * from {}".format(table_quoted))
             redact_these = redact_columns.get(table) or set()
             rows = (redacted_dict(r, redact_these) for r in results)
             # Make sure generator is not empty

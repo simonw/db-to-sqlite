@@ -39,8 +39,14 @@ CREATE TABLE IF NOT EXISTS products (
         ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS user (
+    id int not null auto_increment primary key,
+    name varchar(32) not null
+) ENGINE=InnoDB;
+
 DELETE FROM products;
 DELETE FROM categories;
+DELETE FROM user;
 
 INSERT INTO categories (id, name) VALUES (1, "Junk");
 INSERT INTO vendors (id, name) VALUES (1, "Acme Corp");
@@ -51,6 +57,9 @@ INSERT INTO products (id, name, cat_id, vendor_id)
 
 INSERT INTO vendor_categories (cat_id, vendor_id)
     VALUES (1, 1);
+
+INSERT INTO user (id, name)
+    VALUES (1, 'Lila');
 """
 
 POSTGRESQL_SQL = """
@@ -78,11 +87,16 @@ CREATE TABLE IF NOT EXISTS products (
     FOREIGN KEY (cat_id) REFERENCES categories(id),
     FOREIGN KEY (vendor_id) REFERENCES vendors(id)
 );
+CREATE TABLE IF NOT EXISTS "user" (
+    id int not null primary key,
+    name varchar(32) not null
+);
 
 DELETE FROM products;
 DELETE FROM categories;
 DELETE FROM vendors;
 DELETE FROM vendor_categories;
+DELETE FROM "user";
 
 INSERT INTO categories (id, name) VALUES (1, 'Junk');
 INSERT INTO vendors (id, name) VALUES (1, 'Acme Corp');
@@ -93,6 +107,9 @@ INSERT INTO products (id, name, cat_id, vendor_id)
 
 INSERT INTO vendor_categories (cat_id, vendor_id)
     VALUES (1, 1);
+
+INSERT INTO "user" (id, name)
+    VALUES (1, 'Lila');
 """
 
 
