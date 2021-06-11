@@ -27,8 +27,9 @@ from sqlite_utils import Database
     help="Should foreign keys have indexes? Default on",
 )
 @click.option("-p", "--progress", help="Show progress bar", is_flag=True)
+@click.option("--postgres-schema", help="PostgreSQL schema to use")
 def cli(
-    connection, path, all, table, skip, redact, sql, output, pk, index_fks, progress
+    connection, path, all, table, skip, redact, sql, output, pk, index_fks, progress, postgres_schema
 ):
     """
     Load data from any database into SQLite.
@@ -53,7 +54,11 @@ def cli(
     for table_name, column_name in redact:
         redact_columns.setdefault(table_name, set()).add(column_name)
     db = Database(path)
-    db_conn = create_engine(connection).connect()
+    if postgres_schema:
+        conn_args = {"options": "-csearch_path={}".format(postgres_schema)}
+    else:
+        conn_args = {}
+    db_conn = create_engine(connection, connect_args=conn_args).connect()
     inspector = inspect(db_conn)
     # Figure out which tables we are copying, if any
     tables = table
@@ -160,3 +165,6 @@ def redacted_dict(row, redact):
         if key in d:
             d[key] = "***"
     return d
+
+if __name__ == "__main__":
+    cli()
