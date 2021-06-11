@@ -121,7 +121,14 @@ def setup_mysql():
         yield
         return
     bits = make_url(MYSQL_TEST_DB_CONNECTION)
-    db = MySQLdb.connect(user=bits.username, passwd=bits.password or "", host=bits.host, port=bits.port)
+    kwargs = {
+        "user": bits.username,
+        "passwd": bits.password or "",
+        "host": bits.host,
+    }
+    if bits.port:
+        kwargs["port"] = int(bits.port)
+    db = MySQLdb.connect(**kwargs)
     cursor = db.cursor()
     cursor.execute("CREATE DATABASE IF NOT EXISTS {};".format(bits.database))
     cursor.execute("USE {};".format(bits.database))
@@ -131,7 +138,7 @@ def setup_mysql():
     db.close()
     yield
     # teardown_stuff
-    db = MySQLdb.connect(user=bits.username, passwd=bits.password or "", host=bits.host, port=bits.port)
+    db = MySQLdb.connect(**kwargs)
     cursor = db.cursor()
     cursor.execute("DROP DATABASE {};".format(bits.database))
     cursor.close()
