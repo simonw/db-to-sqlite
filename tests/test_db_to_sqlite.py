@@ -1,7 +1,7 @@
 import sqlite_utils
 from sqlite_utils.db import ForeignKey
-
-from .shared import all_databases
+import pytest
+from .shared import all_databases, psycopg2, POSTGRESQL_TEST_DB_CONNECTION
 
 
 @all_databases
@@ -93,3 +93,20 @@ def test_sql_query(connection, tmpdir, cli_runner):
         {"name": "Bobcat Statue", "cat_id": 1},
         {"name": "Yoga Scarf", "cat_id": 1},
     ] == list(db["out"].rows)
+
+
+@pytest.mark.skipif(psycopg2 is None, reason="pip install psycopg2")
+def test_postgres_schema(tmpdir, cli_runner):
+    db_path = str(tmpdir / "test_sql.db")
+    connection = POSTGRESQL_TEST_DB_CONNECTION
+    result = cli_runner(
+        [connection, db_path, "--all", "--postgres-schema", "other_schema"]
+    )
+    assert result.exit_code == 0
+    db = sqlite_utils.Database(db_path)
+    assert db.tables[0].schema == (
+        "CREATE TABLE [other_schema_categories] (\n"
+        "   [id] INTEGER PRIMARY KEY,\n"
+        "   [name] TEXT\n"
+        ")"
+    )

@@ -29,7 +29,18 @@ from sqlite_utils import Database
 @click.option("-p", "--progress", help="Show progress bar", is_flag=True)
 @click.option("--postgres-schema", help="PostgreSQL schema to use")
 def cli(
-    connection, path, all, table, skip, redact, sql, output, pk, index_fks, progress, postgres_schema
+    connection,
+    path,
+    all,
+    table,
+    skip,
+    redact,
+    sql,
+    output,
+    pk,
+    index_fks,
+    progress,
+    postgres_schema,
 ):
     """
     Load data from any database into SQLite.
@@ -165,6 +176,7 @@ def redacted_dict(row, redact):
         if key in d:
             d[key] = "***"
     return d
+
 
 if __name__ == "__main__":
     cli()

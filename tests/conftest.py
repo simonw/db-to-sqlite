@@ -112,6 +112,15 @@ INSERT INTO vendor_categories (cat_id, vendor_id)
 
 INSERT INTO "user" (id, name)
     VALUES (1, 'Lila');
+
+CREATE SCHEMA other_schema
+    CREATE TABLE IF NOT EXISTS other_schema_categories (
+        id int not null primary key,
+        name varchar(32) not null
+    );
+
+INSERT INTO other_schema.other_schema_categories (id, name) VALUES (1, 'Other junk');
+
 """
 
 

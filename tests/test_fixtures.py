@@ -46,7 +46,7 @@ def test_fixture_postgresql():
     cursor = db.cursor()
     cursor.execute(
         """
-        SELECT table_name FROM information_schema.tables
+        SELECT table_schema, table_name FROM information_schema.tables
         WHERE table_catalog = 'test_db_to_sqlite'
         AND table_type = 'BASE TABLE'
         AND table_schema NOT IN ('information_schema', 'pg_catalog')
@@ -54,9 +54,10 @@ def test_fixture_postgresql():
     )
     rows = cursor.fetchall()
     assert {
-        ("categories",),
-        ("vendor_categories",),
-        ("products",),
-        ("vendors",),
-        ("user",),
+        ("public", "vendor_categories"),
+        ("public", "categories"),
+        ("public", "products"),
+        ("public", "vendors"),
+        ("public", "user"),
+        ("other_schema", "other_schema_categories"),
     } == set(rows)
