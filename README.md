@@ -45,6 +45,21 @@ For PostgreSQL, use this:
 
         MSSQL Examples:
 
+          The best way to get the connection string needed for the MS SQL connections below is to use urllib from the Standard Library as below
+
+          params = urllib.parse.quote_plus(
+                "DRIVER={SQL Server Native Client 11.0};"
+                "SERVER=localhost;"
+                "DATABASE="my_database;"
+                "Trusted_Connection=yes;"
+          )
+
+          The above will resolve to
+
+          DRIVER%3D%7BSQL+Server+Native+Client+11.0%7D%3B+SERVER%3Dlocalhost%3B+DATABASE%3Dmy_database%3B+Trusted_Connection%3Dyes
+
+          You can then use the string above in the odbc_connect below
+
           mssql+pyodbs:///?odbc_connect=DRIVER%3D%7BSQL+Server+Native+Client+11.0%7D%3B+SERVER%3Dlocalhost%3B+DATABASE%3Dmy_database%3B+Trusted_Connection%3Dyes
           mssql+pyodbs:///?odbc_connect=DRIVER%3D%7BSQL+Server+Native+Client+11.0%7D%3B+SERVER%3Dlocalhost%3B+DATABASE%3Dmy_database%3B+UID%3Dusername%3B+PWD%3Dpasswd
         
