@@ -130,7 +130,7 @@ You can even do this using a bash one-liner:
 To set up this tool locally, first checkout the code. Then create a new virtual environment:
 
     cd db-to-sqlite
-    python3 -mvenv venv
+    python3 -m venv venv
     source venv/bin/activate
 
 Or if you are using `pipenv`:
