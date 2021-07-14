@@ -33,11 +33,21 @@ For PostgreSQL, use this:
 
       CONNECTION is a SQLAlchemy connection string, for example:
 
+        PostgreSQL Examples:
+
           postgresql://localhost/my_database
           postgresql://username:passwd@localhost/my_database
 
+        MySQL Examples:
+
           mysql://root@localhost/my_database
           mysql://username:passwd@localhost/my_database
+
+        MSSQL Examples:
+
+          mssql+pyodbs:///?odbc_connect=DRIVER%3D%7BSQL+Server+Native+Client+11.0%7D%3B+SERVER%3Dlocalhost%3B+DATABASE%3Dmy_database%3B+Trusted_Connection%3Dyes
+          mssql+pyodbs:///?odbc_connect=DRIVER%3D%7BSQL+Server+Native+Client+11.0%7D%3B+SERVER%3Dlocalhost%3B+DATABASE%3Dmy_database%3B+UID%3Dusername%3B+PWD%3Dpasswd
+        
 
       More: https://docs.sqlalchemy.org/en/13/core/engines.html#database-urls
 
