@@ -65,8 +65,10 @@ def cli(
         raise click.ClickException(
             "--all OR --table OR --table-name-pattern OR --sql required"
         )
-    if skip and not all:
-        raise click.ClickException("--skip can only be used with --all")
+    if skip and not (all or table_name_pattern):
+        raise click.ClickException(
+            "--skip can only be used with --all OR --table-name-pattern"
+        )
     redact_columns = {}
     for table_name, column_name in redact:
         redact_columns.setdefault(table_name, set()).add(column_name)
