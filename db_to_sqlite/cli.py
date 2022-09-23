@@ -1,4 +1,5 @@
 import itertools
+import re
 
 import click
 from sqlalchemy import create_engine, inspect
@@ -11,6 +12,7 @@ from sqlite_utils import Database
 @click.argument("path", type=click.Path(exists=False), required=True)
 @click.option("--all", help="Detect and copy all tables", is_flag=True)
 @click.option("--table", help="Specific tables to copy", multiple=True)
+@click.option("--table-name-pattern", help="Table name pattern for tables to copy")
 @click.option("--skip", help="When using --all skip these tables", multiple=True)
 @click.option(
     "--redact",
@@ -34,6 +36,7 @@ def cli(
     path,
     all,
     table,
+    table_name_pattern,
     skip,
     redact,
     sql,
@@ -58,8 +61,10 @@ def cli(
 
     More: https://docs.sqlalchemy.org/en/13/core/engines.html#database-urls
     """
-    if not all and not table and not sql:
-        raise click.ClickException("--all OR --table OR --sql required")
+    if not all and not table and not table_name_pattern and not sql:
+        raise click.ClickException(
+            "--all OR --table OR --table-name-pattern OR --sql required"
+        )
     if skip and not all:
         raise click.ClickException("--skip can only be used with --all")
     redact_columns = {}
@@ -78,6 +83,12 @@ def cli(
     tables = table
     if all:
         tables = inspector.get_table_names()
+    elif table_name_pattern:
+        tables = [
+            t
+            for t in inspector.get_table_names()
+            if re.match(table_name_pattern, t) is not None
+        ]
     if tables:
         foreign_keys_to_add = []
         for i, table in enumerate(tables):

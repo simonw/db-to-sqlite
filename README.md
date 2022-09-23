@@ -45,6 +45,7 @@ For PostgreSQL, use this:
       --version                     Show the version and exit.
       --all                         Detect and copy all tables
       --table TEXT                  Specific tables to copy
+      --table-name-pattern TEXT     Table name pattern for tables to copy
       --skip TEXT                   When using --all skip these tables
       --redact TEXT...              (table, column) pairs to redact with ***
       --sql TEXT                    Optional SQL query to run
@@ -72,6 +73,11 @@ When running `--all` you can specify tables to skip using `--skip`:
     db-to-sqlite "postgresql://localhost/myblog" blog.db \
         --all \
         --skip=django_migrations
+
+Alternatively, you can specify a regex pattern via `--table-name-pattern` to match against table names. For example:
+
+    db-to-sqlite "postgresql://localhost/myblog" blog.db \
+        --table-name-pattern "tag_\w+"
 
 If you want to save the results of a custom SQL query, do this:
 
