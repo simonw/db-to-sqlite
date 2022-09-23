@@ -13,7 +13,7 @@ from sqlite_utils import Database
 @click.option("--all", help="Detect and copy all tables", is_flag=True)
 @click.option("--table", help="Specific tables to copy", multiple=True)
 @click.option("--table-name-pattern", help="Table name pattern for tables to copy")
-@click.option("--skip", help="When using --all skip these tables", multiple=True)
+@click.option("--skip", help="When using --all or --table-name-pattern skip these tables", multiple=True)
 @click.option(
     "--redact",
     help="(table, column) pairs to redact with ***",
