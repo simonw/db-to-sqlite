@@ -3,6 +3,7 @@ import itertools
 import click
 from sqlalchemy import create_engine, inspect
 from sqlite_utils import Database
+from fnmatch import fnmatch
 
 
 @click.command()
@@ -83,7 +84,7 @@ def cli(
         for i, table in enumerate(tables):
             if progress:
                 click.echo("{}/{}: {}".format(i + 1, len(tables), table), err=True)
-            if table in skip:
+            if any(fnmatch(table, pattern) for pattern in skip):
                 if progress:
                     click.echo("  ... skipping", err=True)
                 continue
