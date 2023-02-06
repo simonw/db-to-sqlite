@@ -1,7 +1,7 @@
 import itertools
 
 import click
-from sqlalchemy import create_engine, inspect
+from sqlalchemy import create_engine, inspect, text
 from sqlite_utils import Database
 
 
@@ -107,9 +107,9 @@ def cli(
             table_quoted = db_conn.dialect.identifier_preparer.quote_identifier(table)
             if progress:
                 count = db_conn.execute(
-                    "select count(*) from {}".format(table_quoted)
+                    text("select count(*) from {}".format(table_quoted))
                 ).fetchone()[0]
-            results = db_conn.execute("select * from {}".format(table_quoted))
+            results = db_conn.execute(text("select * from {}".format(table_quoted)))
             redact_these = redact_columns.get(table) or set()
             rows = (redacted_dict(r, redact_these) for r in results)
             # Make sure generator is not empty
@@ -167,8 +167,8 @@ def cli(
     if sql:
         if not output:
             raise click.ClickException("--sql must be accompanied by --output")
-        results = db_conn.execute(sql)
-        rows = (dict(r) for r in results)
+        results = db_conn.execute(text(sql))
+        rows = (dict(r._mapping) for r in results)
         db[output].insert_all(rows, pk=pk)
     if index_fks:
         db.index_foreign_keys()
@@ -183,7 +183,7 @@ def detect_primary_key(db_conn, table):
 
 
 def redacted_dict(row, redact):
-    d = dict(row)
+    d = dict(row._mapping)
     for key in redact:
         if key in d:
             d[key] = "***"
