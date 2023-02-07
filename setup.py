@@ -25,7 +25,7 @@ setup(
     packages=find_packages(),
     install_requires=["sqlalchemy", "sqlite-utils>=2.9.1", "click"],
     extras_require={
-        "test": ["pytest"],
+        "test": ["pytest", "pytest-timeout"],
         "test_mysql": ["pytest", "mysqlclient"],
         "test_postgresql": ["pytest", "psycopg2"],
         "mysql": ["mysqlclient"],

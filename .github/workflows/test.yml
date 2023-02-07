@@ -50,4 +50,5 @@ jobs:
       env:
         POSTGRESQL_TEST_DB_CONNECTION: postgresql://postgres:postgres@127.0.0.1:${{ job.services.postgres.ports['5432'] }}/test_db_to_sqlite
         MYSQL_TEST_DB_CONNECTION: mysql://root@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/test_db_to_sqlite
-      run: pytest -vv
+      run: |-
+        pytest -vv --timeout=3 --timeout_method=thread
