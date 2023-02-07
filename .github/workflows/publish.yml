@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
     services:
       postgres:
         image: postgres
@@ -62,7 +62,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.9'
+        python-version: '3.11'
     - uses: actions/cache@v2
       name: Configure pip caching
       with:
