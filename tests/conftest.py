@@ -165,13 +165,6 @@ def setup_mysql():
     db.commit()
     db.close()
     yield
-    # teardown_stuff
-    db = MySQLdb.connect(**kwargs)
-    cursor = db.cursor()
-    cursor.execute("DROP DATABASE {};".format(bits.database))
-    cursor.close()
-    db.commit()
-    db.close()
 
 
 @pytest.fixture(autouse=True, scope="session")
