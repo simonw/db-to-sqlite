@@ -1,7 +1,6 @@
 import pytest
 import sqlite_utils
 from sqlite_utils.db import ForeignKey
-import sys
 
 from .shared import POSTGRESQL_TEST_DB_CONNECTION, all_databases, psycopg2
 
@@ -107,10 +106,6 @@ def test_sql_query(connection, tmpdir, cli_runner):
 
 
 @pytest.mark.skipif(psycopg2 is None, reason="pip install psycopg2")
-# This test was failing in CI on 3.9 and higher, I couldn't figure out why:
-@pytest.mark.skipif(
-    sys.version_info > (3, 8), reason="https://github.com/simonw/db-to-sqlite/issues/47"
-)
 def test_postgres_schema(tmpdir, cli_runner):
     db_path = str(tmpdir / "test_sql.db")
     connection = POSTGRESQL_TEST_DB_CONNECTION
