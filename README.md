@@ -24,37 +24,37 @@ For PostgreSQL, use this:
     pip install 'db-to-sqlite[postgresql]'
 
 ## Usage
+```
+Usage: db-to-sqlite [OPTIONS] CONNECTION PATH
 
-    Usage: db-to-sqlite [OPTIONS] CONNECTION PATH
+  Load data from any database into SQLite.
 
-      Load data from any database into SQLite.
+  PATH is a path to the SQLite file to create, e.c. /tmp/my_database.db
 
-      PATH is a path to the SQLite file to create, e.c. /tmp/my_database.db
+  CONNECTION is a SQLAlchemy connection string, for example:
 
-      CONNECTION is a SQLAlchemy connection string, for example:
+      postgresql://localhost/my_database
+      postgresql://username:passwd@localhost/my_database
 
-        postgresql://localhost/my_database
-        postgresql://username:passwd@localhost/my_database
+      mysql://root@localhost/my_database
+      mysql://username:passwd@localhost/my_database
 
-        mysql://root@localhost/my_database
-        mysql://username:passwd@localhost/my_database
-        
+  More: https://docs.sqlalchemy.org/en/13/core/engines.html#database-urls
 
-      More: https://docs.sqlalchemy.org/en/13/core/engines.html#database-urls
-
-    Options:
-      --version                     Show the version and exit.
-      --all                         Detect and copy all tables
-      --table TEXT                  Specific tables to copy
-      --skip TEXT                   When using --all skip these tables
-      --redact TEXT...              (table, column) pairs to redact with ***
-      --sql TEXT                    Optional SQL query to run
-      --output TEXT                 Table in which to save --sql query results
-      --pk TEXT                     Optional column to use as a primary key
-      --index-fks / --no-index-fks  Should foreign keys have indexes? Default on
-      -p, --progress                Show progress bar
-      --postgres-schema TEXT        PostgreSQL schema to use
-      --help                        Show this message and exit.
+Options:
+  --version                     Show the version and exit.
+  --all                         Detect and copy all tables
+  --table TEXT                  Specific tables to copy
+  --skip TEXT                   When using --all skip these tables
+  --redact TEXT...              (table, column) pairs to redact with ***
+  --sql TEXT                    Optional SQL query to run
+  --output TEXT                 Table in which to save --sql query results
+  --pk TEXT                     Optional column to use as a primary key
+  --index-fks / --no-index-fks  Should foreign keys have indexes? Default on
+  -p, --progress                Show progress bar
+  --postgres-schema TEXT        PostgreSQL schema to use
+  --help                        Show this message and exit.
+```
 
 For example, to save the content of the `blog_entry` table from a PostgreSQL database to a local file called `blog.db` you could do this:
 
