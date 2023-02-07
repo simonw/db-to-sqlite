@@ -3,7 +3,7 @@ import os
 
 from setuptools import find_packages, setup
 
-VERSION = "1.4"
+VERSION = "1.5"
 
 
 def get_long_description():
@@ -31,12 +31,12 @@ setup(
         "mysql": ["mysqlclient"],
         "postgresql": ["psycopg2"],
     },
-    tests_require=["db-to-sqlite[test]"],
+    python_requires=">=3.7",
     entry_points="""
         [console_scripts]
         db-to-sqlite=db_to_sqlite.cli:cli
     """,
-    url="https://github.com/simonw/db-to-sqlite",
+    url="https://datasette.io/tools/db-to-sqlite",
     project_urls={
         "Documentation": "https://github.com/simonw/db-to-sqlite/blob/main/README.md",
         "Changelog": "https://github.com/simonw/db-to-sqlite/releases",
@@ -45,13 +45,15 @@ setup(
         "CI": "https://travis-ci.com/simonw/db-to-sqlite",
     },
     classifiers=[
-        "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
         "Intended Audience :: End Users/Desktop",
         "Topic :: Database",
         "License :: OSI Approved :: Apache Software License",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
     ],
 )
