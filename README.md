@@ -33,11 +33,12 @@ For PostgreSQL, use this:
 
       CONNECTION is a SQLAlchemy connection string, for example:
 
-          postgresql://localhost/my_database
-          postgresql://username:passwd@localhost/my_database
+        postgresql://localhost/my_database
+        postgresql://username:passwd@localhost/my_database
 
-          mysql://root@localhost/my_database
-          mysql://username:passwd@localhost/my_database
+        mysql://root@localhost/my_database
+        mysql://username:passwd@localhost/my_database
+        
 
       More: https://docs.sqlalchemy.org/en/13/core/engines.html#database-urls
 
@@ -90,6 +91,26 @@ If the tables you want to copy from your PostgreSQL database aren't in the defau
         --all \
         --postgres-schema my_schema
 
+## Using db-to-sqlite with MS SQL
+
+The best way to get the connection string needed for the MS SQL connections below is to use urllib from the Standard Library as below
+
+    params = urllib.parse.quote_plus(
+        "DRIVER={SQL Server Native Client 11.0};"
+        "SERVER=localhost;"
+        "DATABASE=my_database;"
+        "Trusted_Connection=yes;"
+    )
+
+The above will resolve to
+
+    DRIVER%3D%7BSQL+Server+Native+Client+11.0%7D%3B+SERVER%3Dlocalhost%3B+DATABASE%3Dmy_database%3B+Trusted_Connection%3Dyes
+
+You can then use the string above in the odbc_connect below
+
+    mssql+pyodbc:///?odbc_connect=DRIVER%3D%7BSQL+Server+Native+Client+11.0%7D%3B+SERVER%3Dlocalhost%3B+DATABASE%3Dmy_database%3B+Trusted_Connection%3Dyes
+    mssql+pyodbc:///?odbc_connect=DRIVER%3D%7BSQL+Server+Native+Client+11.0%7D%3B+SERVER%3Dlocalhost%3B+DATABASE%3Dmy_database%3B+UID%3Dusername%3B+PWD%3Dpasswd
+
 ## Using db-to-sqlite with Heroku Postgres
 
 If you run an application on [Heroku](https://www.heroku.com/) using their [Postgres database product](https://www.heroku.com/postgres), you can use the `heroku config` command to access a compatible connection string:
@@ -120,7 +141,7 @@ You can even do this using a bash one-liner:
 To set up this tool locally, first checkout the code. Then create a new virtual environment:
 
     cd db-to-sqlite
-    python3 -mvenv venv
+    python3 -m venv venv
     source venv/bin/activate
 
 Or if you are using `pipenv`:
