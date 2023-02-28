@@ -158,6 +158,7 @@ def setup_mysql():
         kwargs["port"] = int(bits.port)
     db = MySQLdb.connect(**kwargs)
     cursor = db.cursor()
+    cursor.execute("DROP DATABASE {};".format(bits.database))
     cursor.execute("CREATE DATABASE IF NOT EXISTS {};".format(bits.database))
     cursor.execute("USE {};".format(bits.database))
     cursor.execute(MYSQL_SQL)
