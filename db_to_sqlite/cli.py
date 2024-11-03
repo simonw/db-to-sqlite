@@ -29,6 +29,8 @@ from sqlite_utils import Database
 )
 @click.option("-p", "--progress", help="Show progress bar", is_flag=True)
 @click.option("--postgres-schema", help="PostgreSQL schema to use")
+@click.option("--no_data", help="When using --no_data only copy schema for these tables", multiple=True)
+
 def cli(
     connection,
     path,
@@ -42,6 +44,7 @@ def cli(
     index_fks,
     progress,
     postgres_schema,
+    no_data,
 ):
     """
     Load data from any database into SQLite.
@@ -105,34 +108,44 @@ def cli(
             )
             count = None
             table_quoted = db_conn.dialect.identifier_preparer.quote_identifier(table)
-            if progress:
-                count = db_conn.execute(
-                    text("select count(*) from {}".format(table_quoted))
-                ).fetchone()[0]
-            results = db_conn.execute(text("select * from {}".format(table_quoted)))
-            redact_these = redact_columns.get(table) or set()
-            rows = (redacted_dict(r, redact_these) for r in results)
-            # Make sure generator is not empty
-            try:
-                first = next(rows)
-            except StopIteration:
-                # This is an empty table - create an empty copy
-                if not db[table].exists():
-                    create_columns = {}
-                    for column in inspector.get_columns(table):
-                        try:
-                            column_type = column["type"].python_type
-                        except NotImplementedError:
-                            column_type = str
-                        create_columns[column["name"]] = column_type
-                    db[table].create(create_columns)
+            if table in no_data:
+                create_columns = {}
+                for column in inspector.get_columns(table):
+                    try:
+                        column_type = column["type"].python_type
+                    except NotImplementedError:
+                        column_type = str
+                    create_columns[column["name"]] = column_type
+                db[table].create(create_columns,pks)
             else:
-                rows = itertools.chain([first], rows)
                 if progress:
-                    with click.progressbar(rows, length=count) as bar:
-                        db[table].insert_all(bar, pk=pks, replace=True)
+                    count = db_conn.execute(
+                        text("select count(*) from {}".format(table_quoted))
+                    ).fetchone()[0]
+                results = db_conn.execute(text("select * from {}".format(table_quoted)))
+                redact_these = redact_columns.get(table) or set()
+                rows = (redacted_dict(r, redact_these) for r in results)
+                # Make sure generator is not empty
+                try:
+                    first = next(rows)
+                except StopIteration:
+                    # This is an empty table - create an empty copy
+                    if not db[table].exists():
+                        create_columns = {}
+                        for column in inspector.get_columns(table):
+                            try:
+                                column_type = column["type"].python_type
+                            except NotImplementedError:
+                                column_type = str
+                            create_columns[column["name"]] = column_type
+                        db[table].create(create_columns)
                 else:
-                    db[table].insert_all(rows, pk=pks, replace=True)
+                    rows = itertools.chain([first], rows)
+                    if progress:
+                        with click.progressbar(rows, length=count) as bar:
+                            db[table].insert_all(bar, pk=pks, replace=True)
+                    else:
+                        db[table].insert_all(rows, pk=pks, replace=True)
         foreign_keys_to_add_final = []
         for table, column, other_table, other_column in foreign_keys_to_add:
             # Make sure both tables exist and are not skipped - they may not
