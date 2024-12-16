@@ -27,7 +27,7 @@ def test_db_to_sqlite(connection, tmpdir, cli_runner):
     assert [{"id": 1, "name": "Lila"}] == list(db["user"].rows)
     assert (
         db["empty_table"].schema
-        == "CREATE TABLE [empty_table] (\n   [id] INTEGER,\n   [name] TEXT,\n   [ip] TEXT\n)"
+        == "CREATE TABLE [empty_table] (\n   [id] INTEGER PRIMARY KEY,\n   [name] TEXT,\n   [ip] TEXT\n)"
     )
     # Check foreign keys
     assert [

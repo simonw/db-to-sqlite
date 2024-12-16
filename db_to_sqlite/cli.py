@@ -125,7 +125,7 @@ def cli(
                         except NotImplementedError:
                             column_type = str
                         create_columns[column["name"]] = column_type
-                    db[table].create(create_columns)
+                    db[table].create(create_columns, pks)
             else:
                 rows = itertools.chain([first], rows)
                 if progress:
