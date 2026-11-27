@@ -2,6 +2,7 @@ import itertools
 
 import click
 from sqlalchemy import create_engine, inspect, text
+from sqlalchemy.types import JSON
 from sqlite_utils import Database
 
 
@@ -120,10 +121,14 @@ def cli(
                 if not db[table].exists():
                     create_columns = {}
                     for column in inspector.get_columns(table):
-                        try:
-                            column_type = column["type"].python_type
-                        except NotImplementedError:
+                        if isinstance(column["type"], JSON):
                             column_type = str
+                        else:
+                            try:
+                                column_type = column["type"].python_type
+                            except NotImplementedError:
+                                column_type = str
+                        
                         create_columns[column["name"]] = column_type
                     db[table].create(create_columns)
             else:
